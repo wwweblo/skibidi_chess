@@ -3,19 +3,24 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #22223B;
+  --background-pattern-color: rgba(255, 255, 255, 0.199);
+  --foreground: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--background);
+  background-image: linear-gradient(var(--background-pattern-color) 2.1px, transparent 2.1px),
+                    linear-gradient(to right, var(--background-pattern-color) 2.1px, var(--background) 2.1px);
+  background-size: 42px 42px;
+  display: block; /* Убедимся, что body ведет себя как блочный элемент */
+  min-height: 100vh; /* Минимальная высота для корректного отображения на всех экранах */
+  box-sizing: border-box; /* Для учета любых отступов и рамок */
 }
