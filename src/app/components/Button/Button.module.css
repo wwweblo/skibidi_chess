@@ -1,48 +1,59 @@
-.backgroundBlur{
-    color: #d8d5d5;
-    background-color: #ffffff36;
-    backdrop-filter: blur(10px);
-    border-radius: 8px;
-    padding: 10px 20px;
-    margin: 5px;
-    transition: all 0.3s;
+.green{
+    background: var(--green);
+    color: var(--green-foreground);
     font-weight: bold;
-    font-size: 14px;
+    border-radius: 8px;
 }
-.backgroundBlur:hover{
-    color: white;
-    background-color: #ffffff4f;
-    backdrop-filter: blur(10px);
-    box-shadow: 5px 5px 5px #00000046;
+.green:hover{
+    background: var(--green-light);
 }
-.backgroundBlur:active{
-    background-color: #ffffff00;
-    backdrop-filter: blur(10px);
-    font-size: 13px;
+.green:active{
+    background: var(--green-dark);
 }
 
-.backgroundNone{
-    background: none;
-    color: #b8b8b8;
-    padding: 8px 18px;
-    margin: 5px;
-    transition: all 0.3s;
+.red{
+    background-color: var(--red);
+    color: var(--red-foreground);
     font-weight: bold;
-    font-size: 14px;
-    border: 3px solid white;
     border-radius: 8px;
-}
-.backgroundNone:hover{
-    color: white
 }
 
-.backgroundWhite{
-    background: white;
-    color: black;
-    padding: 8px 18px;
-    margin: 5px;
-    transition: all 0.3s;
+.red:hover{
+    background: var(--red-light);
+
+}
+.red:active{
+    background: var(--red-dark);
+}
+
+.gray{
+    background-color: var(--gray);
+    color: var(--gray-foreground);
     font-weight: bold;
-    font-size: 14px;
     border-radius: 8px;
+}
+.gray:hover{
+    background: var(--gray-light);
+}
+.gray:active{
+    background: var(--gray-dark);
+}
+
+/* Sizes */
+.small{
+    padding: 5px 20px;
+    margin: 5px;
+    font-size: 14px;
+}
+
+.middle{
+    padding: 10px 35px;
+    margin: 5px;
+    font-size: 16px;
+}
+
+.big{
+    padding: 15px 50px;
+    margin: 5px;
+    font-size: 18px;
 }

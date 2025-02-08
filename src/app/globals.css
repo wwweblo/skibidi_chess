@@ -3,13 +3,61 @@
 @tailwind utilities;
 
 :root {
-  --background: #22223B;
-  --background-pattern-color: rgba(255, 255, 255, 0.199);
-  --foreground: #ffffff;
+  --background-pattern: #ebebeb;
+  --background: #97c9f8;
+  --menu: rgb(161, 161, 161);
+  --menu-hightlight: #eeeeee;
+
+  --red: #ef476f;
+  --red-light: #f8c7ce;
+  --red-dark: #b8294f;
+  --red-foreground: #470919; 
+ 
+  --orenge: #ff6600;
+  --orange-light: #f8b9a0;
+  --orange-dark: #87471d;
+  --orange-foreground: #2b1304;
+
+  --yellow: #ffd166;
+  --yellow-light:  #f8dd9e ;
+  --yellow-dark: #7e6200; 
+  --yellow-foreground: #2f2300;
+
+  --green: #5effc7;
+  --green-light: #00ebac;
+  --green-dark: #028260;
+  --green-foreground: #003626;
+
+  --blue: #118ab2;
+  --blue-light: #e3f3ff;
+  --blue-dark: #096482;
+  --blue-foreground: #01202c ;
+
+  --purple: #3626a7;
+  --purple-light: #cfcdf6;
+  --purple-dark: #3626a7;
+  --purple-foregraund: #1b115f;
+
+  --gray: #98999b;
+  --gray-light: #d6d3d3;
+  --gray-dark: #474040;
+  --gray-foreground: #262122;
+
+  --foreground:#000000;
+  --foreground-light: #ffffff;
+}
+
+[data-theme="dark"] {
+  --background-pattern: #584e49;
+  --background: #8a817c;
+  --menu: #a8a3a0;
+  --menu-hightlight: #635e5b;
+
+  --foreground:#000000;
+  --foreground-light: #ffffff;
 }
 
 html, body {
-  height: 100%;
   margin: 0;
   padding: 0;
 }
@@ -17,10 +65,10 @@ html, body {
 body {
   color: var(--foreground);
   background-color: var(--background);
-  background-image: linear-gradient(var(--background-pattern-color) 2.1px, transparent 2.1px),
-                    linear-gradient(to right, var(--background-pattern-color) 2.1px, var(--background) 2.1px);
-  background-size: 42px 42px;
-  display: block; /* Убедимся, что body ведет себя как блочный элемент */
-  min-height: 100vh; /* Минимальная высота для корректного отображения на всех экранах */
-  box-sizing: border-box; /* Для учета любых отступов и рамок */
+  opacity: 0.8;
+  background-image:  radial-gradient(var(--background) 0.75px, transparent 0.75px),
+      radial-gradient(var(--background) 0.75px, var(--background-pattern) 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0,15px 15px;
 }
+

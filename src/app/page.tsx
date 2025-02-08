@@ -1,7 +1,9 @@
 "use client"
-import NavMenuButton from "./components/Menu/NavMenuButton";
-import type { MenuItem } from "./components/Menu/NavMenuButton";
+import NavMenuButton from "./components/DropdownMenu/DropdownMenu";
+import type { MenuItem } from "./components/DropdownMenu/DropdownMenu";
 import Button from "./components/Button/Button";
+import Board from './components/Chessboard/Board'
+import { useState } from "react";
 
 export default function Home() {
   const menuItems: MenuItem[] = [
@@ -11,15 +13,9 @@ export default function Home() {
     { label: "Careers", link: "#", description: "Join the Procreate team." },
   ];
 
-  function check() {
-    alert("Cliked")
-  }
-
   return (
     <>
-      <NavMenuButton label="Menu" items={menuItems}/>
-      <Button onClick={check}>Click</Button>
-
+      <Board size={300}/>
     </>
 
   );

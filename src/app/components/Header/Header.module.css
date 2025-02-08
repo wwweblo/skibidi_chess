@@ -2,6 +2,5 @@
     padding-left: 10rem;
     padding-top: 1rem;
     font-size: 48px;
-    /*background-color: rgba(255, 255, 255, 0.219);
-    backdrop-filter: blur(2px);*/
+    color: var(--foreground)
 }

@@ -1,0 +1,82 @@
+.menuContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.menuButton {
+  background: var(--menu);
+  color: var(--gray-foreground);
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 120px;
+  transition: all 0.3s;
+}
+.menuButton:hover {
+  background: var(--gray-light);
+
+}
+
+.arrow {
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin: 5px;
+  width: 250px;
+  background-color: var(--menu);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.menuList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menuItem {
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.menuItem:hover {
+  background-color: var(--menu-hightlight);
+  backdrop-filter: blur(10px);
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+}
+.menuItem:active {
+  background-color: var(--menu);
+  backdrop-filter: blur(10px);
+}
+
+.menuLink {
+  text-decoration: none;
+  color: var(--foreground);
+  display: block;
+}
+
+.menuLabel {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.menuDescription {
+  font-size: 12px;
+  color: var(--foreground-dark);
+  margin-top: 2px;
+}
