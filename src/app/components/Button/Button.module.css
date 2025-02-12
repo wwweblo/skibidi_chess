@@ -39,6 +39,16 @@
     background: var(--gray-dark);
 }
 
+.defaultStyle{
+    font-weight: bold;
+    border-radius: 8px;
+    background: var(--menu);
+}
+
+.defaultStyle:hover{
+    background: var(--menu-hightlight);
+}
+
 /* Sizes */
 .small{
     padding: 5px 20px;

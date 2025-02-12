@@ -1,0 +1,10 @@
+.wrapperContainer{
+    margin: 10px;
+}
+
+.fenInputField{
+    background-color:var(--menu);
+    border-radius: 8px;
+    padding: 5px;
+    width: max-content;
+}

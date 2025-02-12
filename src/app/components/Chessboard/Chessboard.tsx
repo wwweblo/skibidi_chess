@@ -1,133 +1,91 @@
-import React, { useEffect, useState } from 'react';
-import { Chessboard } from 'react-chessboard';
-import { Chess, Square } from 'chess.js';
+import React, { useEffect, useRef, useState, useMemo } from "react";
+import { Chess } from "chess.js";
+import { Chessboard, ChessboardDnDProvider } from "react-chessboard";
+import style from './ChessBoardWrapper.module.css';
+import Button from "../Button/Button";
 
-interface BoardProps {
+interface ChessBoardWrapperProps {
+  isFenVisible?: boolean;
   size?: number;
-  showFen?: boolean;
-  areTakebacksAble?: boolean;
 }
 
-const Board: React.FC<BoardProps> = ({ size = 400, showFen = false, areTakebacksAble = false }) => {
-  const [game, setGame] = useState(new Chess());
-  const [moveFrom, setMoveFrom] = useState<Square | null>(null);
-  const [optionSquares, setOptionSquares] = useState<Record<string, { background: string; borderRadius?: string }>>({});
-  const [fen, setFen] = useState(game.fen());
-  const [history, setHistory] = useState<string[]>([]);
-  const [currentMove, setCurrentMove] = useState(0);
+const ChessBoardWrapper: React.FC<ChessBoardWrapperProps> = ({
+  isFenVisible = false,
+  size = 500
+}) => {
+  const game = useMemo(() => new Chess(), []);
+  const [fenPosition, setFenPosition] = useState(game.fen());
+  const [copyStatus, setCopyStatus] = useState<string | null>(null); // Состояние для отслеживания статуса копирования
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    setFen(game.fen());
-    setHistory(prev => [...prev.slice(0, currentMove), game.fen()]);
-  }, [game]);
+  const handleFenInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fen = e.target.value;
 
-  const getMoveOptions = (square: Square) => {
-    const moves = game.moves({ square, verbose: true }) as { from: Square; to: Square }[];
-    if (moves.length === 0) {
-      setOptionSquares({});
-      return;
+    try {
+      game.load(fen); // Если FEN некорректен, будет выброшена ошибка
+      setFenPosition(game.fen());
+    } catch (error) {
+      console.error("Некорректный FEN:", error);
     }
-    const newSquares: Record<string, { background: string; borderRadius?: string }> = {};
-    moves.forEach(move => {
-      newSquares[move.to] = {
-        background: game.get(move.to) ? "radial-gradient(circle, rgba(0,0,0,.1) 85%, transparent 85%)" : "radial-gradient(circle, rgba(0,0,0,.1) 25%, transparent 25%)",
-        borderRadius: "50%"
-      };
+  };
+
+  const handlePieceDrop = (sourceSquare: string, targetSquare: string, piece: string): boolean => {
+    const move = game.move({
+      from: sourceSquare,
+      to: targetSquare,
+      promotion: piece[1].toLowerCase() ?? "q",
     });
-    newSquares[square] = { background: "rgba(255, 255, 0, 0.4)" };
-    setOptionSquares(newSquares);
-  };
 
-  const onSquareClick = (square: Square) => {
-    if (moveFrom) {
-      const move = game.move({ from: moveFrom, to: square, promotion: 'q' });
-      if (move) {
-        setGame(new Chess(game.fen()));
-        setCurrentMove(prev => prev + 1);
-      }
-      setMoveFrom(null);
-      setOptionSquares({});
-      return;
-    }
-    
-    if (game.get(square)) {
-      getMoveOptions(square);
-      setMoveFrom(square);
-    }
-  };
-
-  const onPieceDragBegin = (_piece: string, sourceSquare: Square) => {
-    getMoveOptions(sourceSquare);
-    setMoveFrom(sourceSquare);
-  };
-
-  const onPieceDrop = (sourceSquare: Square, targetSquare: Square) => {
-    const move = game.move({ from: sourceSquare, to: targetSquare, promotion: 'q' });
     if (move) {
-      setGame(new Chess(game.fen()));
-      setCurrentMove(prev => prev + 1);
+      setFenPosition(game.fen());
+      return true; // Успешное перемещение
     }
-    setMoveFrom(null);
-    setOptionSquares({});
-    return Boolean(move);
+
+    return false; // Не удалось переместить
   };
 
-  const onFenChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newFen = event.target.value;
-    const newGame = new Chess();
-    if (newGame.load(newFen)) {
-      setGame(newGame);
-    }
-    setFen(newFen);
-  };
-
-  const takeBack = () => {
-    if (currentMove > 0) {
-      const newGame = new Chess();
-      newGame.load(history[currentMove - 1]);
-      setGame(newGame);
-      setCurrentMove(prev => prev - 1);
-    }
-  };
-
-  const redoMove = () => {
-    if (currentMove < history.length - 1) {
-      const newGame = new Chess();
-      newGame.load(history[currentMove + 1]);
-      setGame(newGame);
-      setCurrentMove(prev => prev + 1);
-    }
+  const copyFenToClipboard = () => {
+    navigator.clipboard.writeText(fenPosition)
+      .then(() => {
+        setCopyStatus("✔️"); // Устанавливаем статус копирования на галочку
+        setTimeout(() => {
+          setCopyStatus(null); // Сбрасываем статус через 2 секунды
+        }, 2000);
+      })
+      .catch(err => {
+        console.error("Ошибка при копировании FEN:", err);
+      });
   };
 
   return (
-    <div>
-      <Chessboard 
-        position={fen} 
-        onSquareClick={onSquareClick} 
-        onPieceDragBegin={onPieceDragBegin} 
-        onPieceDrop={onPieceDrop} 
-        boardWidth={size} 
-        customSquareStyles={optionSquares}
-      />
-      {areTakebacksAble && (
-        <div style={{ width: size, display: 'flex', justifyContent: 'space-between', marginTop: 10 }}>
-          <button onClick={takeBack} disabled={currentMove === 0}>Undo</button>
-          <button onClick={redoMove} disabled={currentMove >= history.length - 1}>Redo</button>
-        </div>
-      )}
-      {showFen && (
-        <div style={{width: size, display: 'flex', marginTop: 10}}>
-          <p>FEN:</p>
-          <input 
-            type="text" 
-            value={fen} 
-            onChange={onFenChange} 
-            style={{ width: size, textAlign: 'center', borderRadius: 8 }}
+    <div 
+      className={style.wrapperContainer}
+      style={{ width: size }}>
+      <ChessboardDnDProvider>
+        <Chessboard
+          id="CustomChessboard"
+          position={fenPosition}
+          onPieceDrop={handlePieceDrop}
+          boardWidth={size}
         />
+        <div className="flex mt-5">
+          <Button size='small' style='gray' onClick={copyFenToClipboard}>
+            {copyStatus || "FEN"} {/* Отображаем статус копирования или текст кнопки */}
+          </Button>
+          {isFenVisible && (
+            <input
+              ref={inputRef}
+              value={fenPosition}
+              onChange={handleFenInputChange}
+              placeholder="Введите FEN для изменения позиции"
+              className={style.fenInputField}
+              style={{ width: '100%' }} // Устанавливаем ширину в 100%
+            />
+          )}
         </div>
-      )}
+      </ChessboardDnDProvider>
     </div>
   );
 };
 
-export default Board;
+export default ChessBoardWrapper;

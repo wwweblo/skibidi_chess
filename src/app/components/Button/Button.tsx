@@ -5,8 +5,8 @@ import styles from './Button.module.css'
 interface ButtonProps {
   children: ReactNode,
   onClick?: React.MouseEventHandler<HTMLButtonElement>,
-  style: string,
-  size: string
+  style?: string,
+  size?: string
 }
 
 const Button: React.FC<ButtonProps> = ({ children, onClick, style, size }) => {
@@ -23,7 +23,7 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, style, size }) => {
       buttonStyle = styles.gray;
       break;
     default:
-      buttonStyle = '';
+      buttonStyle = styles.defaultStyle;
   }
 
   let buttonSize
@@ -37,6 +37,8 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, style, size }) => {
     case 'big':
       buttonSize = styles.big;
       break;
+    default:
+      buttonSize = "p-2 m-2 text-sm";
   }
 
   return (

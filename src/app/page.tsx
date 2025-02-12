@@ -1,16 +1,12 @@
-"use client"
+"use client";
 
-import Board from "./components/Chessboard/Chessboard";
-
+import ChessBoardWpapper from "./components/Chessboard/Chessboard";
 
 export default function Home() {
-
   return (
     <>
-      <Board 
-      areTakebacksAble={true}
-      showFen={true}/>
+      <ChessBoardWpapper
+        isFenVisible={true} />
     </>
-
   );
 }
