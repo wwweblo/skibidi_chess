@@ -4,6 +4,8 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import style from './Header.module.css';
 import Button from '../Button/Button';
 
+
+
 interface HeaderProps {
   children?: ReactNode;
 }
@@ -42,6 +44,7 @@ const Header: React.FC<HeaderProps> = ({
     <div className={`flex align-middle`}>
       <header className={style.Header}>
         <Button 
+          size='small'
           onClick={() => toggleTheme(setCurrentTheme)}
         >
           {currentTheme === 'dark' ? '🌙' : '☀️'} {/* Солнце или луна в зависимости от темы */}

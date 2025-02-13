@@ -5,8 +5,8 @@
 :root {
   --background-pattern: #ebebeb;
   --background: #97c9f8;
-  --menu: rgb(161, 161, 161);
-  --menu-hightlight: #c2c2c2;
+  --menu: #a1a1a1a9;
+  --menu-hightlight: #ffffff8f;
 
   --red: #ef476f;
   --red-light: #f8c7ce;
@@ -51,7 +51,7 @@
   --background-pattern: #584e49;
   --background: #8a817c;
   --menu: #a8a3a0;
-  --menu-hightlight: #635e5b;
+  --menu-hightlight: #ffffff8f;
 
   --foreground:#000000;
   --foreground-light: #ffffff;

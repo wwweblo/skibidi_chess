@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import styles from "./DropdownMenu.module.css";
+import styles from "./NavMenuButton.module.css";
 
 export interface MenuItem {
   label: string;
