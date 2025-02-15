@@ -8,7 +8,20 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node", // chenged to awoid stockfish Worker err
+
+    /*
+     ⚠ ./src/utils/stockfishEngine.ts:7:39
+error TP1001 new Worker("/stockfish.js") is not statically analyse-able 
+   5 |   constructor() {
+   6 |     this.stockfish =
+>  7 |       typeof Worker !== "undefined" ? new Worker("/stockfish.js") : null;
+     |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   8 |     this.onMessage = this.onMessage.bind(this);
+   9 |
+  10 |     if (this.stockfish) {
+    */
+
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
