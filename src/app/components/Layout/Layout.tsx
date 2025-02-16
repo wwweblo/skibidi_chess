@@ -21,7 +21,7 @@ const Layout: React.FC<LayoutProps> = ({children}) => {
     <main>
       <Header>
         <div className='flex gap-4'>
-          <b>Chess</b>.skibidi
+          Chess.skibidi
           <NavMenuButton label='Data' style='p-5' items={nav}/>
           <NavMenuButton label='Play' style='p-5' items={play}/>
         </div>

@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --background-pattern: #ebebeb;
-  --background: #97c9f8;
-  --menu: #a1a1a1a9;
-  --menu-hightlight: #ffffff8f;
+  --background-pattern: #97c9f8;
+  --background: hsl(0, 0%, 90%);
+  --menu: hsl(0, 0%, 70%);
+  --menu-hightlight: hsl(0, 0%, 80%);
 
   --red: #ef476f;
   --red-light: #f8c7ce;
@@ -48,12 +48,12 @@
 }
 
 [data-theme="dark"] {
-  --background-pattern: #584e49;
-  --background: #8a817c;
-  --menu: #a8a3a0;
-  --menu-hightlight: #ffffff8f;
+  --background: hsl(0, 0%, 10%);;
+  --background-pattern: #8a817c;
+  --menu: hsl(0, 0%, 45%);;
+  --menu-hightlight: hsl(0, 0%, 50%);
 
-  --foreground:#000000;
+  --foreground:#bdbbb7;
   --foreground-light: #ffffff;
 }
 
@@ -65,10 +65,9 @@ html, body {
 body {
   color: var(--foreground);
   background-color: var(--background);
-  opacity: 0.8;
-  background-image:  radial-gradient(var(--background) 0.75px, transparent 0.75px),
-      radial-gradient(var(--background) 0.75px, var(--background-pattern) 0.75px);
-  background-size: 30px 30px;
-  background-position: 0 0,15px 15px;
+  opacity: 1;
+  background-image:  radial-gradient(var(--background-pattern) 1.05px, transparent 1.05px), radial-gradient(var(--background-pattern) 1.05px, var(--background) 1.05px);
+  background-size: 42px 42px;
+  background-position: 0 0,21px 21px;
 }
 

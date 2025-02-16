@@ -1,8 +1,19 @@
+.container{
+    margin-top: 5px;
+
+}
+
+.childrenContainer {
+    display: flex;
+    flex-direction: column; /* Изменяем направление на вертикальное */
+    align-items: center; /* Центрируем элементы по горизонтали */
+    justify-content: center; /* Центрируем элементы по вертикали */
+    height: 100%; /* Убедитесь, что контейнер занимает всю высоту родителя */
+}
+
 .Header{
     display: flex;
     align-items: center;
-    padding-left: 10rem;
-    padding-top: 1rem;
-    font-size: 48px;
+    font-size: 32px;
     color: var(--foreground)
 }

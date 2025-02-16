@@ -18,12 +18,14 @@ const ChessPage = () => {
   const fetchPosition = async (fen: string) => {
     setLoading(true);
     try {
+      console.log("Запрашиваем FEN:", fen);
       const response = await fetch(`/api/openings?fen=${encodeURIComponent(fen)}`);
       const data = await response.json();
-
+      
+      console.log("Полученные данные:", data);
+  
       if (data.error) {
-        // Если позиция не найдена, оставляем поля без изменений
-        setButtonStyle("red"); 
+        setButtonStyle("red");
         setButtonText("Сохранить позицию");
       } else {
         setPositionNameEn(data.name_en || "");
@@ -36,7 +38,7 @@ const ChessPage = () => {
     }
     setLoading(false);
   };
-
+  
   // Загружаем стартовую позицию при первой загрузке
   useEffect(() => {
     fetchPosition(start_fen);

@@ -29,6 +29,7 @@ function toggleTheme(setCurrentTheme: React.Dispatch<React.SetStateAction<string
 const Header: React.FC<HeaderProps> = ({
     children = <h1 className='text-center'>Header</h1>
  }) => {
+  
   const [currentTheme, setCurrentTheme] = useState<string>('light'); // Состояние для текущей темы
 
   useEffect(() => {
@@ -41,15 +42,19 @@ const Header: React.FC<HeaderProps> = ({
   }, []);
 
   return (
-    <div className={`flex align-middle`}>
+    <div className={style.container}>
       <header className={style.Header}>
+        {/* Theme butoon */}
         <Button 
           size='small'
           onClick={() => toggleTheme(setCurrentTheme)}
         >
           {currentTheme === 'dark' ? '🌙' : '☀️'} {/* Солнце или луна в зависимости от темы */}
         </Button>
-        {children}
+
+        <div className={style.childrenContainer}>
+          {children}
+        </div>
       </header>
     </div>
   );

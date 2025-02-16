@@ -6,7 +6,7 @@
 .menuButton {
   background: var(--menu);
   color: var(--gray-foreground);
-  padding: 10px 15px;
+  padding: 5px 15px;
   border: none;
   border-radius: 8px;
   font-size: 16px;
@@ -34,6 +34,7 @@
   margin: 5px;
   width: 250px;
   background-color:var(--menu);
+  opacity: 0.95;
   backdrop-filter: blur(10px);
   border-radius: 10px; 
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
