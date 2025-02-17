@@ -2,32 +2,45 @@
   "name": "skibidi_chess",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-
+    "server": "node --loader ts-node/esm src/server.ts",
     "generate-links": "ts-node src/scripts/generateLinks.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6.3.1",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.0",
     "better-sqlite3": "^11.8.1",
     "chess.js": "^1.0.0",
     "classnames": "^2.5.1",
+    "jsonwebtoken": "^9.0.2",
     "next": "15.1.6",
+    "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-chessboard": "^4.7.2",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.54.2",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@types/better-sqlite3": "^7.6.12",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.8",
     "@types/node": "^20.17.18",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
+    "express": "^4.21.2",
     "postcss": "^8",
+    "prisma": "^6.3.1",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
