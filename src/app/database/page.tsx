@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import ChessBoardWrapper from "@/app/components/ChessBoardWrapper/ChessBoardWrapper";
-import Button from "@/app/components/Button/Button";
-import TextBox from "@/app/components/TextBox/TextBox";
+import ChessBoardWrapper from "@/components/ChessBoardWrapper/ChessBoardWrapper";
+import Button from "@/components/Button/Button";
+import TextBox from "@/components/TextBox/TextBox";
 
 const start_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"; // Начальная позиция
 

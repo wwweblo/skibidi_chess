@@ -3,12 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-
-type RegisterFormData = {
-  login: string;
-  email: string;
-  password: string;
-};
+import { RegisterFormData } from "@/types/RegisterFormData";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -22,6 +17,7 @@ export default function RegisterPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+        credentials: "include", // ✅ Добавлено: теперь куки с токеном сохранятся
       });
 
       const result = await response.json();
@@ -29,7 +25,7 @@ export default function RegisterPage() {
         throw new Error(result.message);
       }
 
-      router.push("/user/login"); // Перенаправление на страницу логина
+      router.push("/dashboard"); // ✅ Теперь сразу перенаправляет в личный кабинет
     } catch (err: any) {
       setError(err.message);
     }

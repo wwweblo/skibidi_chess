@@ -7,6 +7,16 @@ import NavMenuButton, { MenuItem } from "../NavMenuButton/NavMenuButton";
 import Button from "../Button/Button";
 import { useRouter } from "next/navigation";
 
+// 🛠 Функция для получения куки по имени
+const getCookie = (name: string): string | null => {
+  const cookies = document.cookie.split("; ");
+  for (const cookie of cookies) {
+    const [key, value] = cookie.split("=");
+    if (key === name) return decodeURIComponent(value);
+  }
+  return null;
+};
+
 interface LayoutProps {
   children?: React.ReactNode;
 }
@@ -34,13 +44,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = getCookie("token"); // 🍪 Теперь токен берём из cookie
     if (token) {
       try {
         const decodedToken = JSON.parse(atob(token.split(".")[1])); // Раскодируем payload
         setUserLogin(decodedToken.userLogin);
       } catch (error) {
-        console.error("Ошибка декодирования токена", error);
+        console.error("❌ Ошибка декодирования токена:", error);
       }
     }
   }, []);
@@ -66,8 +76,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             ) : (
               <NavMenuButton label="Sign In" style="p-5" items={guestMenu} />
             )}
-
-
         </div>
       </Header>
       {children}

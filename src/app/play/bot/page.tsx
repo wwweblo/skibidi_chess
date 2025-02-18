@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import ChessBoardWrapper from "@/app/components/ChessBoardWrapper/ChessBoardWrapper";
-import Button from "@/app/components/Button/Button";
+import ChessBoardWrapper from "@/components/ChessBoardWrapper/ChessBoardWrapper";
+import Button from "@/components/Button/Button";
 import Engine from "@/utils/stockfishEngine";
 
 const ChessPage = () => {

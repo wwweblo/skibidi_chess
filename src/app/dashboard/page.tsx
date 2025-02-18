@@ -2,29 +2,34 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Button from "../components/Button/Button";
+import Button from "../../components/Button/Button";
 
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState<{ login: string; email: string } | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      router.push("/user/login"); // Перенаправление на страницу логина, если нет токена
-      return;
-    }
-
-    try {
-      const decodedToken = JSON.parse(atob(token.split(".")[1])); // Декодируем payload
-      setUser({ login: decodedToken.userLogin, email: decodedToken.userEmail });
-    } catch (error) {
-      console.error("Ошибка декодирования токена", error);
-      localStorage.removeItem("token");
-      router.push("/user/login"); // Перенаправление, если токен поврежден
-    }
+    fetch("/api/auth/me", { credentials: "include" })
+      .then((res) => {
+        if (!res.ok) throw new Error("Не авторизован");
+        return res.json();
+      })
+      .then((data) => setUser({ login: data.userLogin, email: data.userEmail }))
+      .catch(() => router.push("/user/login"));
   }, [router]);
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+      if (response.ok) {
+        router.push("/user/login");
+      } else {
+        console.error("Ошибка выхода:", await response.text());
+      }
+    } catch (error) {
+      console.error("Ошибка выхода:", error);
+    }
+  };
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow-lg">
@@ -39,15 +44,7 @@ export default function Dashboard() {
         <p>Загрузка...</p>
       )}
 
-      <Button
-        onClick={() => {
-          localStorage.removeItem("token");
-          router.push("/login");
-        }}
-        style="red"
-      >
-        Выйти
-      </Button>
+      <Button onClick={handleLogout} style="red">Выйти</Button>
     </div>
   );
 }

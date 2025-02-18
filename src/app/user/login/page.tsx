@@ -21,6 +21,7 @@ export default function LoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
+        credentials: "include", // ✅ Теперь браузер отправит cookie с JWT
       });
 
       const result = await response.json();
@@ -28,8 +29,7 @@ export default function LoginPage() {
         throw new Error(result.message);
       }
 
-      localStorage.setItem("token", result.token);
-      router.push("/dashboard"); // Перенаправление на защищённую страницу
+      router.push("/dashboard"); // ✅ Теперь куки будут использоваться автоматически
     } catch (err: any) {
       setError(err.message);
     }

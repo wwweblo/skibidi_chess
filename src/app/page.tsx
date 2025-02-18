@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ChessBoardWpapper from "./components/ChessBoardWrapper/ChessBoardWrapper";
+import ChessBoardWpapper from "../components/ChessBoardWrapper/ChessBoardWrapper";
 
 export default function Home() {
 

@@ -35,6 +35,6 @@ error TP1001 new Worker("/stockfish.js") is not statically analyse-able
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/components/ChessBoardWrapper/ChessBoardWrapper.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/ChessBoardWrapper/ChessBoardWrapper.tsx"],
   "exclude": ["node_modules"]
 }
