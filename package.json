@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "server": "node --loader ts-node/esm src/server.ts",
-    "generate-links": "ts-node src/scripts/generateLinks.ts"
+    "generate-links": "node --loader ts-node/esm src/scripts/generateLinks.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.3.1",
