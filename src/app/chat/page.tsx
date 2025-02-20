@@ -1,10 +1,20 @@
-import React from 'react'
-import Chat from '../../components/Chat/Chat'
+"use client";
+
+import React, { useEffect, useState } from "react";
+import Chat from "@/components/Chat/Chat";
 
 const ChatPage = () => {
-  return (
-    <Chat/>
-  )
-}
+  const [isClient, setIsClient] = useState(false);
 
-export default ChatPage
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return <div className="loading">⏳ Загрузка...</div>; // Фикс SSR-проблем
+  }
+
+  return <Chat />;
+};
+
+export default ChatPage;

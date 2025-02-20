@@ -8,6 +8,7 @@
   }
   
   .chatTitle {
+    color: var(--foreground-primary);
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 1rem;
@@ -32,7 +33,7 @@
   }
   
   .myMessage {
-    background-color: #3b82f6;
+    background-color: var(--highlight);
     color: white;
     align-self: flex-end;
     text-align: right;

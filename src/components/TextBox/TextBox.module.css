@@ -1,14 +1,49 @@
-.textBox{
-    background-color:var(--menu);
-    border-radius: 8px;
-    padding: 5px;
-    width: 100%;
-    max-width: 50vw;
-    color: var(--foreground)
+.textBoxContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
-/* Меняем цвет `placeholder` */
+.label {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: var(--foreground-primary);
+  align-self: flex-start;
+}
+
+.textBox {
+  color: var(--foreground-primary);
+  background-color: var(--background-pattern);
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--neutral);
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* Поддержка placeholder */
 .textBox::placeholder {
-    color: var(--placeholder-color);
-    opacity: 0.7;
+  color: var(--foreground-secondary);
+  opacity: 0.7;
+}
+
+/* Анимация фокуса */
+.textBox:focus {
+  border-color: var(--info);
+  box-shadow: 0 0 6px var(--info-light);
+}
+
+/* Стиль ошибки */
+.errorInput {
+  border-color: var(--decline);
+  box-shadow: 0 0 6px var(--decline-light);
+}
+
+.errorText {
+  color: var(--decline);
+  font-size: 12px;
+  margin-top: 4px;
 }

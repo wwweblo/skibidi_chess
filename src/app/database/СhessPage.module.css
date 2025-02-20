@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 450px;
+    background: var(--background);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .loading {
+    text-align: center;
+    font-size: 14px;
+    color: var(--foreground-secondary);
+  }
+  

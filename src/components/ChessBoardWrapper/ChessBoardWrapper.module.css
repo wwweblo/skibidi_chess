@@ -1,6 +1,45 @@
-.fenInputField{
-    background-color:var(--menu);
+.wrapperContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--background);
+    padding: 15px;
+    border-radius: 10px;
+  }
+  
+  .controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .fenContainer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .fenInputField {
+    background-color: var(--background-pattern);
+    color: var(--foreground-primary);
+    border: 1px solid var(--neutral);
     border-radius: 8px;
-    padding: 5px;
-    width: max-content;
-}
+    padding: 8px;
+    flex: 1;
+    font-size: 14px;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .actions button {
+    flex: 1;
+    min-width: 100px;
+  }
+  

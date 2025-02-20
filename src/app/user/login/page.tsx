@@ -3,47 +3,61 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-
-type LoginFormData = {
-  loginOrEmail: string;
-  password: string;
-};
+import { LoginFormData, loginUser } from "@/lib/authApi";
+import Button from "@/components/Button/Button";
+import Link from "next/link";
+import TextBox from "@/components/TextBox/TextBox";
+import style from "@/app/user/user.module.css";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { register, handleSubmit } = useForm<LoginFormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>();
+
   const [error, setError] = useState<string | null>(null);
 
   const onSubmit = async (data: LoginFormData) => {
     setError(null);
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-        credentials: "include", // ✅ Теперь браузер отправит cookie с JWT
-      });
-
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message);
-      }
-
-      router.push("/dashboard"); // ✅ Теперь куки будут использоваться автоматически
-    } catch (err: any) {
-      setError(err.message);
+    const result = await loginUser(data);
+    if (!result.success) {
+      setError(result.message);
+      return;
     }
+
+    router.push("/dashboard");
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">Вход</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
-        <input {...register("loginOrEmail")} placeholder="Логин или Email" className="p-2 border rounded" required />
-        <input {...register("password")} type="password" placeholder="Пароль" className="p-2 border rounded" required />
-        <button type="submit" className="p-2 bg-green-500 text-white rounded">Войти</button>
-      </form>
+    <div className={style.formContainer}>
+      <div className={style.container}>
+        <h2 className={style.formHeader}>Вход</h2>
+        {error && <p className={style.error}>{error}</p>}
+        <form onSubmit={handleSubmit(onSubmit)} className={style.form}>
+          <TextBox
+            {...register("loginOrEmail", { required: "Введите логин или email" })}
+            label="Логин или Email"
+            error={errors.loginOrEmail?.message}
+            placeholder="Введите логин или email"
+          />
+          <TextBox
+            {...register("password", { required: "Введите пароль" })}
+            label="Пароль"
+            type="password"
+            error={errors.password?.message}
+            placeholder="Введите пароль"
+          />
+          <Button size="big" style="green">Войти</Button>
+        </form>
+      </div>
+
+      <div className={style.registerContainer}>
+        <Link href="/user/register">
+          Нет аккаунта? <b className={style.link}>Зарегистрироваться</b>
+        </Link>
+      </div>
     </div>
   );
 }

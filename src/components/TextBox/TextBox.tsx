@@ -1,22 +1,28 @@
-import React, { ReactNode } from "react";
+import React, { forwardRef } from "react";
 import style from "./TextBox.module.css";
 
-interface TextBoxProps {
-    placeholder?: string;
-    value?: string;
-    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+interface TextBoxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  error?: string;
 }
 
-const TextBox: React.FC<TextBoxProps> = ({ placeholder = "text...", value, onChange }) => {
-    return (
-        <input
-            className={style.textBox}
-            placeholder={placeholder}
-            type="text"
-            value={value}
-            onChange={onChange}
-        />
-    );
-};
+// ✅ Используем `forwardRef` для корректной работы с `react-hook-form`
+const TextBox = forwardRef<HTMLInputElement, TextBoxProps>(function TextBox(
+  { label, error, className, ...props },
+  ref
+) {
+  return (
+    <div className={`${style.textBoxContainer} ${className || ""}`}>
+      {label && <label htmlFor={props.name} className={style.label}>{label}</label>}
+      <input
+        ref={ref}
+        id={props.name}
+        className={`${style.textBox} ${error ? style.errorInput : ""}`}
+        {...props}
+      />
+      {error && <span className={style.errorText}>{error}</span>}
+    </div>
+  );
+});
 
 export default TextBox;

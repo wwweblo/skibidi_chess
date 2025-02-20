@@ -1,73 +1,125 @@
+:root {
+  --neutral: #A0AEC0;
+  --neutral-light: #B0BEC5;
+  --neutral-dark: #718096;
+  --neutral-text: #333B46;
+
+  --info: #3396fc;
+  --info-light: #4A90E2;
+  --info-dark: #2B6CB0;
+  --info-text: #1A476D;
+
+  --menu-bg: var(--background-pattern);
+  --menu-hover: rgba(0, 0, 0, 0.1);
+  --menu-border: rgba(0, 0, 0, 0.15);
+}
+
+/* Контейнер кнопки */
 .menuContainer {
   position: relative;
   display: inline-block;
 }
 
+/* Кнопка */
 .menuButton {
-  background: var(--menu);
-  color: var(--gray-foreground);
-  padding: 5px 15px;
-  border: none;
+  padding: 8px 15px;
   border-radius: 8px;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
   min-width: 120px;
-  transition: all 0.3s;
-}
-.menuButton:hover {
-  background: var(--gray-light);
-
+  transition: all 0.2s ease-in-out;
 }
 
+/* Варианты кнопок */
+.primary {
+  background: var(--highlight);
+  color: var(--highlight-text);
+}
+.primary:hover { background: var(--highlight-light); }
+.primary:active { background: var(--highlight-dark); }
+
+.neutral {
+  background: var(--neutral);
+  color: var(--neutral-text);
+}
+.neutral:hover { background: var(--neutral-dark); }
+.neutral:active { background: var(--neutral-light); }
+
+.info {
+  background: var(--info);
+  color: var(--info-text);
+}
+.info:hover { background: var(--info-dark); }
+.info:active { background: var(--info-light); }
+
+/* Ghost стиль */
+.ghost {
+  background: transparent;
+  color: var(--foreground-primary);
+  border: 1px solid var(--neutral-dark);
+}
+.ghost:hover { background: var(--neutral-dark); }
+.ghost:active { background: var(--neutral-light); }
+
+/* Стрелка */
 .arrow {
   margin-left: 10px;
   font-size: 12px;
 }
 
+/* Выпадающее меню */
 .dropdown {
   position: absolute;
   top: 100%;
   left: 0;
-  margin: 5px;
+  margin-top: 5px;
   width: 250px;
-  background-color:var(--menu);
-  opacity: 0.95;
-  backdrop-filter: blur(10px);
-  border-radius: 10px; 
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: var(--menu-bg);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px var(--menu-border);
   overflow: hidden;
   z-index: 1000;
+  transition: opacity 0.2s ease-in-out, transform 0.1s ease-in-out;
+  backdrop-filter: blur(3px); /* ✅ Более мягкий размытие */
 }
 
+/* Список меню */
 .menuList {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
+/* Элементы меню */
 .menuItem {
   padding: 10px 15px;
   margin: 5px;
   border-radius: 5px;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
 }
 
+/* ✅ Теперь пункты меню имеют свой `hover`, который не конфликтует со стилем кнопки */
 .menuItem:hover {
-  background-color: var(--menu-hightlight);
-  backdrop-filter: blur(10px);
-  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+  background-color: var(--menu-hover);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 2px 4px var(--menu-border);
 }
-.menuItem:active {
-  background-color: var(--menu);
-  backdrop-filter: blur(10px);
+.menuItem:hover .menuLink{
+  color: var(--highlight);
 }
 
+.menuItem:active {
+  background-color: var(--menu-bg);
+}
+
+/* Ссылки */
 .menuLink {
   text-decoration: none;
-  color: var(--foreground);
+  color: var(--foreground-primary);
   display: block;
 }
 
@@ -78,6 +130,6 @@
 
 .menuDescription {
   font-size: 12px;
-  color: var(--foreground-dark);
+  color: var(--foreground-secondary);
   margin-top: 2px;
 }

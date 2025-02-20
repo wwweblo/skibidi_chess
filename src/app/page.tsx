@@ -2,13 +2,19 @@
 
 import { useState } from "react";
 import ChessBoardWpapper from "../components/ChessBoardWrapper/ChessBoardWrapper";
+import Button from "@/components/Button/Button";
 
 export default function Home() {
 
   return (
     <div className="m-10">
-      <ChessBoardWpapper
-        isFenVisible={true} />
+      <Button variant="agree">Подтвердить</Button>
+<Button variant="decline">Отмена</Button>
+<Button variant="info">Информация</Button>
+<Button variant="warning">Предупреждение</Button>
+<Button variant="neutral">Нейтральная</Button>
+<Button variant="default">Стандарт</Button>
+
     </div>
   );
 }

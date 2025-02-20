@@ -6,39 +6,24 @@ import classNames from "classnames";
 interface ButtonProps {
   children: ReactNode;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  style?: "green" | "red" | "gray";
+  variant?: "agree" | "decline" | "info" | "warning" | "neutral" | "default";
   size?: "small" | "middle" | "big";
-  disabled?: boolean; // ✅ Добавлена поддержка `disabled`
+  disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
   children,
   onClick,
-  style = "gray",
+  variant = "default",
   size = "middle",
   disabled = false
 }) => {
-  // Стили кнопки
-  const buttonStyle = classNames({
-    [styles.green]: style === "green",
-    [styles.red]: style === "red",
-    [styles.gray]: style === "gray",
-    [styles.defaultStyle]: !["green", "red", "gray"].includes(style)
-  });
-
-  // Размер кнопки
-  const buttonSize = classNames({
-    [styles.small]: size === "small",
-    [styles.middle]: size === "middle",
-    [styles.big]: size === "big"
+  const buttonClass = classNames(styles.button, styles[variant], styles[size], {
+    [styles.disabled]: disabled
   });
 
   return (
-    <button
-      className={`${buttonStyle} ${buttonSize} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
-      onClick={onClick}
-      disabled={disabled} // ✅ Теперь можно передавать `disabled`
-    >
+    <button className={buttonClass} onClick={onClick} disabled={disabled}>
       {children}
     </button>
   );

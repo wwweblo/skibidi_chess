@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { RegisterFormData } from "@/types/RegisterFormData";
+import { RegisterFormData, registerUser } from "@/lib/authApi";
+import style from "@/app/user/user.module.css";
+import Button from "@/components/Button/Button";
+import TextBox from "@/components/TextBox/TextBox";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -12,35 +16,33 @@ export default function RegisterPage() {
 
   const onSubmit = async (data: RegisterFormData) => {
     setError(null);
-    try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-        credentials: "include", // ✅ Добавлено: теперь куки с токеном сохранятся
-      });
-
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message);
-      }
-
-      router.push("/dashboard"); // ✅ Теперь сразу перенаправляет в личный кабинет
-    } catch (err: any) {
-      setError(err.message);
+    const result = await registerUser(data);
+    if (!result.success) {
+      setError(result.message ?? '🥵 Ошибочка вышла');
+      return;
     }
+
+    router.push("/dashboard");
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">Регистрация</h2>
-      {error && <p className="text-red-500">{error}</p>}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col space-y-4">
-        <input {...register("login")} placeholder="Логин" className="p-2 border rounded" required />
-        <input {...register("email")} type="email" placeholder="Email" className="p-2 border rounded" required />
-        <input {...register("password")} type="password" placeholder="Пароль" className="p-2 border rounded" required />
-        <button type="submit" className="p-2 bg-blue-500 text-white rounded">Зарегистрироваться</button>
-      </form>
+    <div className={style.formContainer}>
+      <div className={style.container}>
+        <h2 className={style.formHeader}>Регистрация</h2>
+        {error && <p className={style.error}>{error}</p>}
+        <form onSubmit={handleSubmit(onSubmit)} className={style.form}>
+          <TextBox {...register("login")} name="login" placeholder="Логин" required />
+          <TextBox {...register("email")} name="email" type="email" placeholder="Email" required />
+          <TextBox {...register("password")} name="password" type="password" placeholder="Пароль" required />
+          <Button style="green" size="big">Зарегистрироваться</Button>
+        </form>
+      </div>
+
+      <div className={style.registerContainer}>
+        <Link href="/user/login">
+          Уже есть аккаунт? <b className={style.link}>Войти</b>
+        </Link>
+      </div>
     </div>
   );
 }

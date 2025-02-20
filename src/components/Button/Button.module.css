@@ -1,69 +1,83 @@
-.green{
-    background: var(--green);
-    color: var(--green-foreground);
+:root {
+  
+    --default-bg: #2D3748;
+    --default-text: #E2E8F0;
+    --default-hover: #4A5568;
+  }
+  
+  /* Общий стиль кнопки */
+  .button {
     font-weight: bold;
     border-radius: 8px;
-}
-.green:hover{
-    background: var(--green-light);
-}
-.green:active{
-    background: var(--green-dark);
-}
-
-.red{
-    background-color: var(--red);
-    color: var(--red-foreground);
-    font-weight: bold;
-    border-radius: 8px;
-}
-
-.red:hover{
-    background: var(--red-light);
-
-}
-.red:active{
-    background: var(--red-dark);
-}
-
-.gray{
-    background-color: var(--gray);
-    color: var(--gray-foreground);
-    font-weight: bold;
-    border-radius: 8px;
-}
-.gray:hover{
-    background: var(--gray-light);
-}
-.gray:active{
-    background: var(--gray-dark);
-}
-
-.defaultStyle{
-    font-weight: bold;
-    border-radius: 8px;
-    background: var(--menu);
-}
-
-.defaultStyle:hover{
-    background: var(--menu-hightlight);
-}
-
-/* Sizes */
-.small{
-    padding: 5px 20px;
-    margin: 5px;
-    font-size: 14px;
-}
-
-.middle{
-    padding: 10px 35px;
+    padding: 10px 30px;
     margin: 5px;
     font-size: 16px;
-}
-
-.big{
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  
+  /* Состояние Disabled */
+  .disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* ✅ Стили для кнопок с разными цветами */
+  .agree {
+    background: var(--agree);
+    color: var(--agree-text);
+  }
+  .agree:hover { background: var(--agree-light); }
+  .agree:active { background: var(--agree-dark); }
+  
+  .decline {
+    background: var(--decline);
+    color: var(--decline-text);
+  }
+  .decline:hover { background: var(--decline-light); }
+  .decline:active { background: var(--decline-dark); }
+  
+  .info {
+    background: var(--info);
+    color: var(--info-text);
+  }
+  .info:hover { background: var(--info-light); }
+  .info:active { background: var(--info-dark); }
+  
+  .warning {
+    background: var(--warning);
+    color: var(--warning-text);
+  }
+  .warning:hover { background: var(--warning-light); }
+  .warning:active { background: var(--warning-dark); }
+  
+  .neutral {
+    background: var(--neutral);
+    color: var(--neutral-text);
+  }
+  .neutral:hover { background: var(--neutral-light); }
+  .neutral:active { background: var(--neutral-dark); }
+  
+  /* Стиль по умолчанию */
+  .default {
+    background: var(--default-bg);
+    color: var(--default-text);
+  }
+  .default:hover { background: var(--default-hover); color: var(--hightlight) }
+  
+  /* ✅ Различные размеры */
+  .small {
+    padding: 5px 20px;
+    font-size: 14px;
+  }
+  
+  .middle {
+    padding: 10px 35px;
+    font-size: 16px;
+  }
+  
+  .big {
     padding: 15px 50px;
-    margin: 5px;
     font-size: 18px;
-}
+  }
+  

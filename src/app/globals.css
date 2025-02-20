@@ -3,58 +3,60 @@
 @tailwind utilities;
 
 :root {
-  --background-pattern: #97c9f8;
-  --background: hsl(0, 0%, 90%);
-  --menu: hsl(0, 0%, 70%);
-  --menu-hightlight: hsl(0, 0%, 80%);
+  --background: #F5F7FA;
+  --background-pattern: #E4E7EB;
 
-  --red: #ef476f;
-  --red-light: #f8c7ce;
-  --red-dark: #b8294f;
-  --red-foreground: #470919; 
- 
-  --orenge: #ff6600;
-  --orange-light: #f8b9a0;
-  --orange-dark: #87471d;
-  --orange-foreground: #2b1304;
+  --foreground-primary:#1A202C;
+  --foreground-secondary: #4A5568;
 
-  --yellow: #ffd166;
-  --yellow-light:  #f8dd9e ;
-  --yellow-dark: #7e6200; 
-  --yellow-foreground: #2f2300;
+  --neutral: #A0AEC0;
+  --neutral-light: #CBD5E0;
+  --neutral-dark: #718096;
+  --neutral-text: #333B46;
 
-  --green: #5effc7;
-  --green-light: #00ebac;
-  --green-dark: #028260;
-  --green-foreground: #003626;
+  --agree: #48BB78;
+  --agree-light: #68D391;
+  --agree-dark: #2F855A;
+  --agree-text: #1D4733;
 
-  --blue: #118ab2;
-  --blue-light: #e3f3ff;
-  --blue-dark: #096482;
-  --blue-foreground: #01202c ;
+  --decline: #E53E3E;
+  --decline-light: #F56565;
+  --decline-dark: #C53030;
+  --decline-text: #6E1E1E;
 
-  --purple: #3626a7;
-  --purple-light: #cfcdf6;
-  --purple-dark: #3626a7;
-  --purple-foregraund: #1b115f;
+  --info: #3396fc;
+  --info-light: #63B3ED;
+  --info-dark: #2B6CB0;
+  --info-text: #1A476D;
 
-  --gray: #98999b;
-  --gray-light: #d6d3d3;
-  --gray-dark: #474040;
-  --gray-foreground: #262122;
+  --warning: #ED8936;
+  --warning-light: #F6AD55;
+  --warning-dark: #C05621;
+  --warning-text: #7E3B12;
+  
+  --highlight: #b795dd;
+  --highlight-light: #d0bbe9;
+  --highlight-dark: #684492;
+  --highlight-text: #451979;
+  --active: #3182CE;
 
-  --foreground:#000000;
-  --foreground-light: #ffffff;
 }
 
 [data-theme="dark"] {
-  --background: hsl(0, 0%, 10%);;
-  --background-pattern: #8a817c;
-  --menu: hsl(0, 0%, 45%);;
-  --menu-hightlight: hsl(0, 0%, 50%);
+  --background: #1A202C;
+  --background-pattern: #2D3748;
 
-  --foreground:#bdbbb7;
-  --foreground-light: #ffffff;
+  --foreground-primary:#E2E8F0;
+  --foreground-secondary: #A0AEC0;
+
+  --neutral: #A0AEC0;
+  --agree: #68D391;
+  --decline: #F56565;
+  --info: #63B3ED;
+  --warning: #DD6B20;
+  --hightlight: #c5b5e9;
+  --active: #2C7A7B;
+
 }
 
 html, body {
