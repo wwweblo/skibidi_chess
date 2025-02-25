@@ -78,7 +78,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Button
               variant="agree"
               size="small"
-              onClick={() => router.push("/dashboard")}
+              onClick={() => router.push("/user/dashboard")}
             >
               {userLogin}
             </Button>

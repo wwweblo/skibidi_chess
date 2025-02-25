@@ -4,6 +4,7 @@
     padding: 1.5rem;
     border: 1px solid #ddd;
     border-radius: 0.5rem;
+    background: var(--background);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
   
@@ -33,15 +34,15 @@
   }
   
   .myMessage {
-    background-color: var(--highlight);
-    color: white;
+    background-color: var(--info);
+    color: var(--foreground-primary);
     align-self: flex-end;
     text-align: right;
   }
   
   .otherMessage {
-    background-color: #e5e7eb;
-    color: black;
+    background-color: var(--neutral);
+    color: var(--foreground-primary);
     align-self: flex-start;
     text-align: left;
   }
@@ -54,20 +55,19 @@
   .inputField {
     flex: 1;
     padding: 0.5rem;
-    border: 1px solid #ccc;
+    border: 1px solid var(--foreground-primary);
     border-radius: 0.5rem;
   }
   
-  .sendButton {
-    padding: 0.5rem 1rem;
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
+  .link {
+    color: var(--foreground-primary);
+    font-weight: bold;
     cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
   }
   
-  .sendButton:hover {
-    background-color: #2563eb;
+  .link:hover {
+    color: var(--info-text);
+    text-decoration: underline;
   }
-  

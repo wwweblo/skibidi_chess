@@ -65,20 +65,28 @@ export async function loginUser(data: LoginFormData): Promise<{ success: boolean
 }
 
 // 🔹 Функция получения данных пользователя (используется в чате и навигации)
-export async function fetchUser(): Promise<{ userLogin: string; token: string } | null> {
+export async function fetchUser() {
   try {
     const res = await fetch("/api/auth/me", { credentials: "include" });
-    if (!res.ok) throw new Error("❌ Ошибка авторизации");
+
+    if (!res.ok) throw new Error(`❌ Ошибка авторизации: ${res.status} ${res.statusText}`);
 
     const data = await res.json();
-    if (!data.user || !data.token) throw new Error("❌ Токен отсутствует в ответе API");
+    console.log("✅ Пользователь получен:", data);
 
-    return data;
+    if (!data?.user?.userLogin) throw new Error("❌ API не вернул userLogin");
+
+    return {
+      userLogin: data.user.userLogin,
+      token: data.token || data.user.token, // ✅ Поддержка разных форматов ответа
+    };
   } catch (error) {
     console.error("❌ Ошибка получения пользователя:", error);
     return null;
   }
 }
+
+
 
 
 // 🔹 Функция выхода пользователя

@@ -1,0 +1,13 @@
+.ProgressBar{
+    height: 25px;
+    width: 100%;
+    background-color: black;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.Slider{
+    height: 25px;
+    background-color: var(--highlight);
+    transition: 0.3s;
+    border-radius: 0 8 8 0;
+}

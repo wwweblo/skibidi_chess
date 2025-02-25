@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { fetchMessages, sendMessage } from "@/lib/chatApi";
 import { fetchUser } from "@/lib/authApi";
 import { connectSocket } from "@/lib/socket";
@@ -13,15 +14,18 @@ const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [userLogin, setUserLogin] = useState<string | null>(null);
-  const [socket, setSocket] = useState<any>(null);
+  const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(true);
-  const messagesEndRef = useRef<HTMLDivElement | null>(null); // ✅ Ссылка на конец списка сообщений
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const socketRef = useRef<any>(null);
+  const router = useRouter();
 
-  // 🔹 Прокрутка вниз при загрузке сообщений или их обновлении
+  // ✅ Функция прокрутки чата вниз
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // ✅ Инициализация чата и WebSocket
   useEffect(() => {
     const initChat = async () => {
       try {
@@ -29,10 +33,10 @@ const Chat = () => {
         if (!user) throw new Error("❌ Пользователь не авторизован");
 
         setUserLogin(user.userLogin);
+        console.log("✅ Установлен userLogin:", user.userLogin);
 
         const messagesData = await fetchMessages();
         setMessages(messagesData);
-        setTimeout(scrollToBottom, 100); // ✅ Прокрутка после загрузки
       } catch (error) {
         console.error("❌ Ошибка загрузки пользователя или сообщений:", error);
       } finally {
@@ -42,51 +46,92 @@ const Chat = () => {
 
     initChat();
 
-    connectSocket().then((ws) => {
-      if (!ws) return;
-      setSocket(ws);
+    // ✅ Подключаем WebSocket, если он еще не подключен
+    if (!socketRef.current) {
+      connectSocket().then((ws) => {
+        if (!ws) return;
+        if (socketRef.current) {
+          console.warn("⚠️ WebSocket уже подключен!");
+          return;
+        }
 
-      ws.on("message", (message: Message) => {
-        setMessages((prev) => [...prev, message]);
-        setTimeout(scrollToBottom, 50); // ✅ Прокрутка при новом сообщении
+        socketRef.current = ws;
+
+        ws.on("message", (message: Message) => {
+          setMessages((prev) => {
+            if (prev.some((msg) => msg.id === message.id)) return prev; // ✅ Проверка на дубликаты
+            return [...prev, message];
+          });
+        });
+
+        ws.on("disconnect", () => {
+          console.log("❌ WebSocket: Отключено");
+          socketRef.current = null;
+        });
       });
+    }
 
-      return () => {
-        ws.off("message");
-        ws.disconnect();
-      };
-    });
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
   }, []);
 
+  // ✅ Прокрутка чата вниз при обновлении сообщений
+  useEffect(() => {
+    if (!loading) {
+      scrollToBottom();
+    }
+  }, [messages]);
+
+  // ✅ Отправка сообщения
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !userLogin) {
-      console.error("❌ Ошибка: нет сообщения или пользователь не найден");
+    if (!newMessage.trim() || !userLogin || sending) {
+      console.error("❌ Ошибка: нет сообщения, пользователь не найден или идет отправка");
       return;
     }
 
-    const tempMessage: Message = { id: Date.now(), text: newMessage, userLogin };
-    setMessages((prev) => [...prev, tempMessage]);
-    setTimeout(scrollToBottom, 50); // ✅ Прокрутка при отправке нового сообщения
+    setSending(true); // ✅ Блокируем повторное нажатие
+
+    const tempId = Date.now();
+    const tempMessage: Message = { id: tempId, text: newMessage, userLogin };
+
+    setMessages((prev) => [...prev, tempMessage]); // ✅ Добавляем временное сообщение
 
     try {
       const message = await sendMessage(newMessage);
       if (!message) throw new Error("❌ Сервер не вернул сообщение");
 
-      setMessages((prev) => prev.map((msg) => (msg.id === tempMessage.id ? message : msg)));
-      socket?.emit("message", message);
+      setMessages((prev) =>
+        prev
+          .filter((msg) => msg.id !== tempId) // ✅ Удаляем временное сообщение
+          .concat(prev.some((msg) => msg.id === message.id) ? [] : [message]) // ✅ Проверяем дубликаты перед добавлением
+      );
+
+      if (socketRef.current) {
+        socketRef.current.emit("message", message);
+      }
     } catch (error) {
       console.error("❌ Ошибка отправки сообщения:", error);
     }
 
     setNewMessage("");
+    setSending(false); // ✅ Разблокируем кнопку
+  };
+
+  // ✅ Функция перехода в профиль пользователя
+  const goToUserProfile = (login: string) => {
+    router.push(`/user/${login}`);
   };
 
   return (
     <div className={styles.chatContainer}>
-      <h2 className={styles.chatTitle}>Чат</h2>
+      <h2 className={styles.chatTitle}>💬 Чат</h2>
 
       {loading ? (
-        <p className="text-center">Загрузка сообщений...</p>
+        <p className="text-center">⏳ Загрузка сообщений...</p>
       ) : (
         <div className={styles.messagesContainer}>
           {messages.map((msg) => (
@@ -96,11 +141,16 @@ const Chat = () => {
                 msg.userLogin === userLogin ? styles.myMessage : styles.otherMessage
               }`}
             >
-              <span className="font-bold">{msg.userLogin}: </span>
-              <span>{msg.text}</span>
+              <span
+                className={styles.link}
+                onClick={() => goToUserProfile(msg.userLogin)}
+              >
+                {msg.userLogin}:
+              </span>
+              <span> {msg.text}</span>
             </div>
           ))}
-          <div ref={messagesEndRef} /> {/* ✅ Скрытый элемент для прокрутки вниз */}
+          <div ref={messagesEndRef} /> {/* ✅ Реф для прокрутки вниз */}
         </div>
       )}
 
@@ -110,8 +160,8 @@ const Chat = () => {
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Введите сообщение..."
         />
-        <Button variant="agree" size="middle" onClick={handleSendMessage}>
-          Send 🚀
+        <Button variant="agree" size="middle" onClick={handleSendMessage} disabled={!newMessage.trim() || sending}>
+          {sending ? "Отправка..." : "Отправить 🚀"}
         </Button>
       </div>
     </div>

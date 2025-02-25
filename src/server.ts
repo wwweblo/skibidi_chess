@@ -7,31 +7,24 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 const app = express();
 const server = http.createServer(app);
-
 const io = new Server(server, {
   cors: { origin: "http://localhost:3000", credentials: true },
 });
 
-// 🔹 Middleware для проверки токена перед подключением
+// Храним список активных пользователей
+const activeUsers = new Set<string>();
+
 io.use((socket, next) => {
   const token = socket.handshake.auth?.token;
 
-  console.log("🔍 WebSocket: Получен токен:", token); // ✅ Теперь логируем токен на сервере
-
-  if (!token) {
-    console.warn("⚠️ WebSocket: Попытка подключения без токена");
-    return next(new Error("Unauthorized"));
-  }
+  console.log("🔍 WebSocket: Получен токен:", token);
+  if (!token) return next(new Error("Unauthorized"));
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || "your_secret_key") as JwtPayload;
-    
-    console.log("🔑 WebSocket: Декодированный токен:", decoded); // ✅ Логируем декодированный токен
+    console.log("🔑 WebSocket: Декодированный токен:", decoded);
 
-    if (!decoded.userLogin) {
-      console.error("❌ WebSocket: Токен не содержит userLogin");
-      return next(new Error("Unauthorized"));
-    }
+    if (!decoded.userLogin) return next(new Error("Unauthorized"));
 
     socket.data.user = decoded.userLogin;
     next();
@@ -42,28 +35,22 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("✅ WebSocket: Пользователь подключен:", socket.data.user);
+  const userLogin = socket.data.user;
 
-  socket.on("message", async (msg) => {
-    try {
-      if (!msg.text?.trim()) return; // ✅ Игнорируем пустые сообщения
+  if (activeUsers.has(userLogin)) {
+    console.warn(`⚠️ Пользователь уже подключен: ${userLogin}`);
+    socket.disconnect(); // ❌ Отключаем повторное подключение
+    return;
+  }
 
-      const savedMessage = await prisma.message.create({
-        data: {
-          text: msg.text,
-          userLogin: socket.data.user,
-          createdAt: new Date(),
-        },
-      });
-
-      io.emit("message", savedMessage);
-    } catch (error) {
-      console.error("❌ Ошибка сохранения сообщения в БД:", error);
-    }
-  });
+  activeUsers.add(userLogin);
+  console.log("✅ WebSocket: Пользователь подключен:", userLogin);
+  console.log("👥 Активные пользователи:", Array.from(activeUsers));
 
   socket.on("disconnect", () => {
-    console.log("❌ WebSocket: Пользователь отключился:", socket.data.user);
+    activeUsers.delete(userLogin);
+    console.log("❌ WebSocket: Пользователь отключился:", userLogin);
+    console.log("👥 Активные пользователи после отключения:", Array.from(activeUsers));
   });
 });
 

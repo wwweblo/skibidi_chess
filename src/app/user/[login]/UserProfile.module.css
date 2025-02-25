@@ -1,0 +1,61 @@
+.profileContainer {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    background: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .profileTitle {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .messagesTitle {
+    font-size: 20px;
+    margin-top: 20px;
+  }
+  
+  .messagesList {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .messageItem {
+    background: #fff;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .noMessages {
+    font-style: italic;
+    color: gray;
+  }
+  
+  .loading {
+    color: blue;
+  }
+  
+  .error {
+    color: red;
+  }
+  
+  .backButton {
+    margin-top: 20px;
+    padding: 10px;
+    border: none;
+    background: #0070f3;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .backButton:hover {
+    background: #005bb5;
+  }
+  

@@ -22,7 +22,7 @@ export default function RegisterPage() {
       return;
     }
 
-    router.push("/dashboard");
+    router.push("/user/dashboard");
   };
 
   return (
@@ -34,7 +34,7 @@ export default function RegisterPage() {
           <TextBox {...register("login")} name="login" placeholder="Логин" required />
           <TextBox {...register("email")} name="email" type="email" placeholder="Email" required />
           <TextBox {...register("password")} name="password" type="password" placeholder="Пароль" required />
-          <Button style="green" size="big">Зарегистрироваться</Button>
+          <Button variant="agree" size="big">Зарегистрироваться</Button>
         </form>
       </div>
 

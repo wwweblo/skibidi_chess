@@ -27,7 +27,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/dashboard");
+    router.push("/user/dashboard");
   };
 
   return (
@@ -49,7 +49,7 @@ export default function LoginPage() {
             error={errors.password?.message}
             placeholder="Введите пароль"
           />
-          <Button size="big" style="green">Войти</Button>
+          <Button size="big" variant="agree">Войти</Button>
         </form>
       </div>
 
