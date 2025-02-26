@@ -10,12 +10,12 @@ git clone https://github.com/wwweblo/skibidi_chess.git
 ```
 
 2. **Установить зависимости**  
-  ```bash
-  npm install
-  ```
+```bash
+npm install
+```
 3. **env**
 
-Создайте файл .env в корневой папке проекта и заполните его по примеру из `.env.exanple`
+Создайте файл .env в корневой папке проекта и заполните его по примеру из `env.exanple`
 
 3. **Запустить сервер** 
 > [!IMPORTANT]

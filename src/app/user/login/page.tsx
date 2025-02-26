@@ -32,8 +32,8 @@ export default function LoginPage() {
 
   return (
     <div className={style.formContainer}>
-      <div className={style.container}>
-        <h2 className={style.formHeader}>Вход</h2>
+      <div className={style.Container}>
+        <h2 className={style.Header}>Вход</h2>
         {error && <p className={style.error}>{error}</p>}
         <form onSubmit={handleSubmit(onSubmit)} className={style.form}>
           <TextBox

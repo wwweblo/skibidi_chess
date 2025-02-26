@@ -42,7 +42,7 @@ const ChatPage = () => {
   if (loading) return <p className="text-center">⏳ Проверка доступа...</p>;
 
   if (!chatId || hasAccess === false) {
-    return <Alert text="😡 Нет доступа к чату"></Alert>
+    return <Alert>😡 Нет доступа к чату</Alert>
   }
 
   return <Chat chatId={chatId} />;

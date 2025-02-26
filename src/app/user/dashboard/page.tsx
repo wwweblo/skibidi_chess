@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/Button/Button";
+import { Alert } from "@/components/Alert/Alert";
+import style from "./dashboard.module.css"
 
 export default function Dashboard() {
   const router = useRouter();
@@ -56,21 +58,29 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">Личный кабинет</h2>
+    <div className={`max-w-md mx-auto mt-10 p-6 border rounded-lg shadow-lg ${style.Container}`}>
+      <h2 className={style.Header}>Личный кабинет</h2>
 
       {loading ? (
-        <p>Загрузка...</p>
+        <Alert>🛜 Загрузка...</Alert>
       ) : user ? (
-        <div className="space-y-2">
-          <p><strong>Логин:</strong> {user.login}</p>
-          <p><strong>Email:</strong> {user.email}</p>
-        </div>
+        <table>
+          <tbody>
+            <tr>
+              <th className={style.TableHeader}>Логин:</th>
+              <td className={style.TableData}>{user.login}</td>
+            </tr>
+            <tr>
+              <th className={style.TableHeader}>Email:</th>
+              <td className={style.TableData}>{user.email}</td>
+            </tr>
+          </tbody>
+        </table>
       ) : (
-        <p className="text-red-500">Ошибка загрузки данных</p>
+        <Alert>🥵 Ошибка загрузки данных</Alert>
       )}
 
-      <Button onClick={handleLogout}>Выйти</Button>
+      <Button variant="decline" onClick={handleLogout}>Выйти</Button>
     </div>
   );
 }

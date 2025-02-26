@@ -6,16 +6,23 @@
     height: 100vh;
   }
   
-  .container {
+  .Container {
     background: var(--background);
     padding: 20px;
-    border: 1px solid var(--foreground);
+    border: 1px solid var(--background-pattern);
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
     width: 100%;
     max-width: 400px;
   }
+
+  .Header{
+    color: var(--foreground-primary);
+    font-size: 24px;
+    font-weight: bold;
+    border-bottom: 1px solid var(--background-pattern);
+    margin-bottom: 15px;
+}
   
   .form {
     display: flex;

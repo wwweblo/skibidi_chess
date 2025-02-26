@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { fetchUserProfile, getOrCreateChat, fetchUser} from "@/lib/userApi"; // Добавлен API для чатов
 import { Message } from "@/types/message";
 import styles from "./UserProfile.module.css";
+import { Alert } from "@/components/Alert/Alert";
 
 interface UserProfile {
   userLogin: string;
@@ -64,8 +65,8 @@ const UserPage = () => {
     }
   };
   
-  if (loading) return <p className={styles.loading}>⏳ Загрузка профиля...</p>;
-  if (error) return <p className={styles.error}>❌ {error}</p>;
+  if (loading) return   <Alert text="⏳ Загрузка профиля..."/>;
+  if (error)   return   <Alert text={`❌ ${error}`}/>;
 
   return (
     <div className={styles.profileContainer}>
