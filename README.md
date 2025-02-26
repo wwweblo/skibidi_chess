@@ -1,61 +1,132 @@
-# Chess.skibidi
-Course cork for programming collage.
 
-## 🛜 API
 
-All api code is located at `src/app/api` and runs automaticly with `npm run dev`
+## **♟️ Chess.skibidi**
+Учебный проект по программированию для колледжа.
 
-### Endpoints
-- `POST /api/auth/login` - login
-- `POST api/auth/register` - registration
-- `POST /api/auth/logout` - logout from current account
-
-- `GET api/chat/messages` - get all messages
-- `POST api/chat/send` - send a message
-
-- `GET /api/openings` - get all chess openings
-- `GET /api/openings?fen=<FEN>` - search for chess opening name by fen
-- `POST /api/openings` - create new chess openings
-
-**body**
-```json
-{
-  "name_en": "Ruy-Lopez",
-  "name_ru": "Испанская партия",
-  "fen": "rnbqkb1r/pppppppp/8/8/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1"
-}
-```
-- `PUT /api/openings` - update chess opening
-
-**body**
-```json
-{
-  "id": 3,
-  "name_en": "Updated Name",
-  "name_ru": "Обновлённое имя",
-  "fen": "rnbqkb1r/pppppppp/8/8/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1"
-}
+### 📌 **Как запустить проект?**
+1. **Скопируйте проект**
+```bash
+git clone https://github.com/wwweblo/skibidi_chess.git
 ```
 
-- `DELETE /api/openings` - delete opening
+2. **Установить зависимости**  
+  ```bash
+  npm install
+  ```
+3. **env**
 
-**body**
-```json
-{
-  "id": 3
-}
+Создайте файл .env в корневой папке проекта и заполните его по примеру из `.env.exanple`
+
+3. **Запустить сервер** 
+> [!IMPORTANT]
+> Сервер должен запускться на :3000 порте
+  ```bash
+  npm run server
+  ```
+4. **Запустить проект**
+  ```bash
+  npm run dev
+  ```
+
+### 📄 Структура проекта 
+Добавь раздел, описывающий папки и файлы проекта:  
+```
+📂 src
+├── 📂 app               # Основные страницы и API
+├── 📂 components        # UI-компоненты
+├── 📂 data              # Файлы базы данных
+├── 📂 lib               # Утилиты, API-запросы
+├── 📂 scripts           # Cкрипты
+├── 📂 types             # Типы для typescript
+├── 📂 utils             # Вспомогательные функции
+├── 🛜 server.ts         # Код для подключения с серверной стороны
+
 ```
 
-## 📄 Data
+---
 
-### ♟️ Chess Openings
+## **🛜 API**
+Код API находится в `src/app/api` и **автоматически запускается** при `npm run dev`.
 
+### **📌 Аутентификация**
+- `POST /api/auth/register` – **Регистрация пользователя**
+  ```json
+  {
+    "login": "skibidi_player",
+    "email": "skibidi@example.com",
+    "password": "securepassword"
+  }
+  ```
+- `POST /api/auth/login` – **Вход в систему**
+  ```json
+  {
+    "loginOrEmail": "skibidi_player",
+    "password": "securepassword"
+  }
+  ```
+- `POST /api/auth/logout` – **Выход из системы**
+- `GET /api/auth/me` – **Получение информации о текущем пользователе**
+
+### **📌 Чаты**
+- `POST /api/chat/getOrCreateChat` – **Получить чат между 2 пользователями**
+  ```json
+  {
+    "userLogin": "player1",
+    "targetLogin": "player2"
+  }
+  ```
+- `GET /api/chat/messages?chatId=<id>` – **Получить сообщения чата**
+- `POST /api/chat/send` – **Отправить сообщение**
+  ```json
+  {
+    "chatId": 3,
+    "text": "Привет! Как дела?"
+  }
+  ```
+
+### **📌 Шахматные дебюты**
+- `GET /api/openings` – **Получить все шахматные дебюты**
+- `GET /api/openings?fen=<FEN>` – **Поиск дебюта по FEN**
+- `POST /api/openings` – **Добавить новый дебют**
+  ```json
+  {
+    "name_en": "Ruy-Lopez",
+    "name_ru": "Испанская партия",
+    "fen": "rnbqkb1r/pppppppp/8/8/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1"
+  }
+  ```
+- `PUT /api/openings` – **Обновить дебют**
+  ```json
+  {
+    "id": 3,
+    "name_en": "Updated Name",
+    "name_ru": "Обновлённое имя",
+    "fen": "rnbqkb1r/pppppppp/8/8/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1"
+  }
+  ```
+- `DELETE /api/openings` – **Удалить дебют**
+  ```json
+  {
+    "id": 3
+  }
+  ```
+
+### **📌 Пользователи**
+- `GET /api/user?login=<login>` – **Получить информацию о пользователе**
+
+---
+
+## **📄 Данные проекта**
+### **♟️ Шахматные дебюты**
 ![ERD](public/readme/erd_openings.drawio.png)
 
-Original database (`src/data/chess_openings_backup`) is the smallest and the easiest. It contains only `Openings` table.
+- **Исходная база данных** (`src/data/chess_openings_backup`) содержит только таблицу `Openings`.
+- Чтобы построить **дерево дебютов**, нужно сгенерировать связи между позициями.  
+  Запусти команду:
+  ```bash
+  npm run generate-links
+  ```
+  Это выполнит скрипт [generateLinks.ts](src/scripts/generateLinks.ts) и создаст таблицу `position_links`.
 
-If you need to build a tree of openings you need to generate links between positions. So run `npm run generate-links` to do so. It will run [generateLinks.ts](src/scripts/generateLinks.ts) and add an extra table `position_links` to the database
-
-### 👨 Users
-
+### **👨 Пользователи**
 ![ERD](public/readme/erd_users.drawio.png)
