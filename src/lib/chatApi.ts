@@ -32,3 +32,21 @@ export const sendMessage = async (text: string, chatId: number, userLogin: strin
     return null;
   }
 };
+
+export async function checkChatAccess(chatId: number, userLogin: string): Promise<boolean> {
+  try {
+    const response = await fetch(`/api/chat/access?chatId=${chatId}&userLogin=${userLogin}`, {
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("❌ Ошибка доступа к чату");
+    }
+
+    const data = await response.json();
+    return data.hasAccess;
+  } catch (error) {
+    console.error("❌ Ошибка проверки доступа:", error);
+    return false;
+  }
+}

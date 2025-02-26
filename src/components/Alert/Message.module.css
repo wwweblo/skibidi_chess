@@ -1,0 +1,12 @@
+.Alert{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    color: var(--foreground-primary);
+    font-size: 2rem;
+    font-weight: bold;
+    
+
+}
