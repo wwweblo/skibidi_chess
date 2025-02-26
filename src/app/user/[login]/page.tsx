@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { fetchUserProfile } from "@/lib/userApi"; // API для получения данных пользователя
+import { fetchUserProfile, getOrCreateChat, fetchUser} from "@/lib/userApi"; // Добавлен API для чатов
 import { Message } from "@/types/message";
 import styles from "./UserProfile.module.css";
 
@@ -13,12 +13,13 @@ interface UserProfile {
 }
 
 const UserPage = () => {
-  const params = useParams(); // ✅ Получаем `params` как Promise
-  const login = params?.login as string; // ✅ Разворачиваем login
+  const params = useParams();
+  const login = params?.login as string;
   const router = useRouter();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [chatLoading, setChatLoading] = useState(false);
 
   useEffect(() => {
     if (!login) return;
@@ -38,6 +39,31 @@ const UserPage = () => {
     loadUser();
   }, [login]);
 
+  const handleOpenChat = async () => {
+    if (!user) return;
+  
+    try {
+      // ✅ Получаем текущего авторизованного пользователя
+      const currentUser = await fetchUser();
+      if (!currentUser || !currentUser.userLogin) {
+        console.error("❌ Ошибка: Не удалось получить текущего пользователя");
+        return;
+      }
+  
+      console.log(`📡 Открытие чата между ${currentUser.userLogin} и ${user.userLogin}`);
+  
+      // ✅ Передаём корректный `userLogin`
+      const chatId = await getOrCreateChat(currentUser.userLogin, user.userLogin);
+      if (!chatId) throw new Error("Ошибка создания или поиска чата");
+  
+      console.log(`✅ Переход в чат ${chatId}`);
+      router.push(`/chat/${chatId}`);
+    } catch (error) {
+      console.error("❌ Ошибка при открытии чата:", error);
+      setError("Не удалось открыть чат");
+    }
+  };
+  
   if (loading) return <p className={styles.loading}>⏳ Загрузка профиля...</p>;
   if (error) return <p className={styles.error}>❌ {error}</p>;
 
@@ -45,6 +71,10 @@ const UserPage = () => {
     <div className={styles.profileContainer}>
       <h1 className={styles.profileTitle}>👤 Профиль {user?.userLogin}</h1>
       <p><strong>Email:</strong> {user?.userEmail}</p>
+
+      <button className={styles.chatButton} onClick={handleOpenChat} disabled={chatLoading}>
+        {chatLoading ? "🔄 Открытие чата..." : "💬 Открыть чат"}
+      </button>
 
       <h2 className={styles.messagesTitle}>💬 Сообщения:</h2>
       {user?.messages.length ? (

@@ -4,13 +4,17 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { fetchMessages, sendMessage } from "@/lib/chatApi";
 import { fetchUser } from "@/lib/authApi";
-import { connectSocket } from "@/lib/socket";
+import { connectSocket, disconnectSocket, sendMessageViaSocket } from "@/lib/socket";
 import { Message } from "@/types/message";
 import styles from "./Chat.module.css";
 import Button from "@/components/Button/Button";
 import TextBox from "@/components/TextBox/TextBox";
 
-const Chat = () => {
+interface ChatProps {
+  chatId: number;
+}
+
+const Chat: React.FC<ChatProps> = ({ chatId }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [userLogin, setUserLogin] = useState<string | null>(null);
@@ -35,7 +39,7 @@ const Chat = () => {
         setUserLogin(user.userLogin);
         console.log("✅ Установлен userLogin:", user.userLogin);
 
-        const messagesData = await fetchMessages();
+        const messagesData = await fetchMessages(chatId);
         setMessages(messagesData);
       } catch (error) {
         console.error("❌ Ошибка загрузки пользователя или сообщений:", error);
@@ -46,38 +50,38 @@ const Chat = () => {
 
     initChat();
 
-    // ✅ Подключаем WebSocket, если он еще не подключен
-    if (!socketRef.current) {
-      connectSocket().then((ws) => {
-        if (!ws) return;
-        if (socketRef.current) {
-          console.warn("⚠️ WebSocket уже подключен!");
-          return;
-        }
+    const setupSocket = async () => {
+      const ws = await connectSocket();
+      if (!ws) return;
 
-        socketRef.current = ws;
+      if (socketRef.current) {
+        console.warn("⚠️ WebSocket уже подключен!");
+        return;
+      }
 
-        ws.on("message", (message: Message) => {
+      socketRef.current = ws;
+
+      ws.on("message", (message: Message) => {
+        if (message.chatId === chatId) {
           setMessages((prev) => {
             if (prev.some((msg) => msg.id === message.id)) return prev; // ✅ Проверка на дубликаты
             return [...prev, message];
           });
-        });
-
-        ws.on("disconnect", () => {
-          console.log("❌ WebSocket: Отключено");
-          socketRef.current = null;
-        });
+        }
       });
-    }
+
+      ws.on("disconnect", () => {
+        console.log("❌ WebSocket: Отключено");
+        socketRef.current = null;
+      });
+    };
+
+    setupSocket();
 
     return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
+      disconnectSocket();
     };
-  }, []);
+  }, [chatId]);
 
   // ✅ Прокрутка чата вниз при обновлении сообщений
   useEffect(() => {
@@ -93,32 +97,40 @@ const Chat = () => {
       return;
     }
 
-    setSending(true); // ✅ Блокируем повторное нажатие
+    console.log("📡 handleSendMessage: chatId перед отправкой:", chatId);
+
+    if (!chatId) {
+      console.error("❌ Ошибка: chatId отсутствует в handleSendMessage!");
+      return;
+    }
 
     const tempId = Date.now();
-    const tempMessage: Message = { id: tempId, text: newMessage, userLogin };
-
-    setMessages((prev) => [...prev, tempMessage]); // ✅ Добавляем временное сообщение
+    const tempMessage: Message = {
+      id: tempId,
+      text: newMessage,
+      userLogin,
+      chatId,
+      createdAt: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, tempMessage]);
 
     try {
-      const message = await sendMessage(newMessage);
+      const message = await sendMessage(newMessage, chatId, userLogin); // ✅ Передаем userLogin
       if (!message) throw new Error("❌ Сервер не вернул сообщение");
 
       setMessages((prev) =>
         prev
-          .filter((msg) => msg.id !== tempId) // ✅ Удаляем временное сообщение
-          .concat(prev.some((msg) => msg.id === message.id) ? [] : [message]) // ✅ Проверяем дубликаты перед добавлением
+          .filter((msg) => msg.id !== tempId)
+          .concat(prev.some((msg) => msg.id === message.id) ? [] : [message])
       );
 
-      if (socketRef.current) {
-        socketRef.current.emit("message", message);
-      }
+      sendMessageViaSocket(message);
     } catch (error) {
       console.error("❌ Ошибка отправки сообщения:", error);
     }
 
     setNewMessage("");
-    setSending(false); // ✅ Разблокируем кнопку
+    setSending(false);
   };
 
   // ✅ Функция перехода в профиль пользователя
@@ -128,7 +140,7 @@ const Chat = () => {
 
   return (
     <div className={styles.chatContainer}>
-      <h2 className={styles.chatTitle}>💬 Чат</h2>
+      <h2 className={styles.chatTitle}>💬 Чат {chatId}</h2>
 
       {loading ? (
         <p className="text-center">⏳ Загрузка сообщений...</p>
@@ -141,16 +153,13 @@ const Chat = () => {
                 msg.userLogin === userLogin ? styles.myMessage : styles.otherMessage
               }`}
             >
-              <span
-                className={styles.link}
-                onClick={() => goToUserProfile(msg.userLogin)}
-              >
+              <span className={styles.link} onClick={() => goToUserProfile(msg.userLogin)}>
                 {msg.userLogin}:
               </span>
               <span> {msg.text}</span>
             </div>
           ))}
-          <div ref={messagesEndRef} /> {/* ✅ Реф для прокрутки вниз */}
+          <div ref={messagesEndRef} />
         </div>
       )}
 

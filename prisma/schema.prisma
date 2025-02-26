@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,19 +8,45 @@ datasource db {
 }
 
 model User {
-  login     String   @id @unique // Используем login как идентификатор
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
+  login       String   @id @unique // Используем login как идентификатор
+  email       String   @unique
+  password    String
+  createdAt   DateTime @default(now())
 
-  messages  Message[] // Связь: один пользователь -> много сообщений
+  messages    Message[] // Связь: один пользователь -> много сообщений
+  chats       ChatParticipant[] // Участие пользователя в чатах
+}
+
+model Chat {
+  id          Int      @id @default(autoincrement())
+  name        String?  // Название (только для групп)
+  isGroup     Boolean  @default(false) // Флаг группового чата
+  createdAt   DateTime @default(now())
+
+  messages    Message[] // Сообщения в чате
+  participants ChatParticipant[] // Участники чата
+}
+
+model ChatParticipant {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userLogin], references: [login])
+  userLogin   String
+  chat        Chat     @relation(fields: [chatId], references: [id])
+  chatId      Int
+
+  joinedAt    DateTime @default(now())
+
+  @@unique([userLogin, chatId]) // Уникальная связь: один пользователь в одном чате один раз
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
-  text      String
-  createdAt DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  text        String
+  createdAt   DateTime @default(now())
 
-  user      User @relation(fields: [userLogin], references: [login])
-  userLogin String
+  user        User     @relation(fields: [userLogin], references: [login])
+  userLogin   String
+
+  chat        Chat     @relation(fields: [chatId], references: [id])
+  chatId      Int
 }

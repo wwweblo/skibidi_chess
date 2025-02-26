@@ -14,7 +14,7 @@ const ChatPage = () => {
     return <div className="loading">⏳ Загрузка...</div>; // Фикс SSR-проблем
   }
 
-  return <Chat />;
+  return <Chat chatId={1} />;
 };
 
 export default ChatPage;
