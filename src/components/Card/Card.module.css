@@ -1,0 +1,25 @@
+.Container{
+    background-color: var(--background-pattern);
+    display: inline-block;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.Container:hover .Header{color: var(--highlight)}
+.Image{
+    width: 200px;
+    height: 200px;
+}
+
+.Header{
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--foreground-primary);
+    transition: 0.1s;
+
+}
+
+
+.Description{
+    font-size: 16px;
+    color: var(--foreground-secondary)
+}

@@ -11,6 +11,10 @@ export default function Dashboard() {
   const [user, setUser] = useState<{ login: string; email: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
+  function goToMain() {
+    router.push('/');
+  }
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -64,7 +68,7 @@ export default function Dashboard() {
       {loading ? (
         <Alert>🛜 Загрузка...</Alert>
       ) : user ? (
-        <table>
+        <table className={style.Table}>
           <tbody>
             <tr>
               <th className={style.TableHeader}>Логин:</th>

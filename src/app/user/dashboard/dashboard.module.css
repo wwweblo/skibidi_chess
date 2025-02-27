@@ -8,6 +8,10 @@
     max-width: 400px;
 }
 
+.Table{
+    margin-bottom: 10px;
+}
+
 .Header{
     color: var(--foreground-primary);
     font-size: 24px;

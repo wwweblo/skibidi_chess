@@ -6,6 +6,8 @@ import Footer from "../Footer/Footer";
 import NavMenuButton, { MenuItem } from "../NavMenuButton/NavMenuButton";
 import Button from "../Button/Button";
 import { useRouter } from "next/navigation";
+import { Alert } from "../Alert/Alert";
+import style from './Layout.module.css';
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -62,35 +64,36 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     fetchUser();
   }, []);
 
-  return (
-    <main className="layoutContainer">
-      <Header>
-        <div className="navBar">
-          <span className="logo">Chess.skibidi</span>
-          <NavMenuButton label="Data" variant="neutral" items={data} />
-          <NavMenuButton label="Play" variant="neutral" items={play} />
-          <NavMenuButton label="Community" variant="neutral" items={community} />
+  // ... остальной код остается без изменений
 
-          {/* 🔥 Фикс Hydration: показываем заглушку перед рендерингом */}
-          {isLoading ? (
-            <span className="loading-placeholder">Loading...</span>
-          ) : userLogin ? (
-            <Button
-              variant="agree"
-              size="small"
-              onClick={() => router.push("/user/dashboard")}
-            >
-              {userLogin}
-            </Button>
-          ) : (
-            <NavMenuButton label="Sign In" variant="info" items={guestMenu} />
-          )}
-        </div>
-      </Header>
-      <div className="contentContainer">{children}</div>
-      <Footer />
-    </main>
-  );
+return (
+  <main className={style.layoutContainer}>
+    <Header>
+      <div className={style.navBar}>
+        <span className={style.logo} onClick={() => router.push('/')}>Chess.skibidi</span>
+        <NavMenuButton label="Data" variant="neutral" items={data} />
+        <NavMenuButton label="Play" variant="neutral" items={play} />
+        <NavMenuButton label="Community" variant="neutral" items={community} />
+
+        {isLoading ? (
+          <Alert>⌛ Loading...</Alert>
+        ) : userLogin ? (
+          <Button
+            variant="neutral"
+            size="small"
+            styles={`${style.userButton} justify-self-end`} // Добавляем класс для кнопки пользователя
+            onClick={() => router.push("/user/dashboard")}>
+              🚹{userLogin}
+          </Button>
+        ) : (
+          <NavMenuButton label="Sign In" variant="info" items={guestMenu} />
+        )}
+      </div>
+    </Header>
+    <div className="contentContainer">{children}</div>
+    <Footer />
+  </main>
+);
 };
 
 export default Layout;

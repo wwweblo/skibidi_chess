@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import ChessBoardWpapper from "../components/ChessBoardWrapper/ChessBoardWrapper";
 import Button from "@/components/Button/Button";
 import Progressbar from "@/components/ProgressBar/Progressbar";
+import Card from "@/components/Card/Card";
 
 export default function Home() {
 
@@ -18,7 +17,10 @@ export default function Home() {
         <Button variant="default">Стандарт</Button>
       </div>
 
-      <Progressbar/>
+      <Card
+        header='How to move'
+        description="you'll learn game basics"
+        path='/database/learn'/>
     </>
   );
 }
