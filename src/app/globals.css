@@ -51,7 +51,7 @@
 
   --neutral: #A0AEC0;
   --agree: #68D391;
-  --decline: #F56565;
+  --decline: #ffeae9;
   --info: #63B3ED;
   --warning: #DD6B20;
   --hightlight: #c5b5e9;
@@ -66,10 +66,5 @@ html, body {
 
 body {
   color: var(--foreground);
-  background-color: var(--background);
-  opacity: 1;
-  background-image:  radial-gradient(var(--background-pattern) 1.05px, transparent 1.05px), radial-gradient(var(--background-pattern) 1.05px, var(--background) 1.05px);
-  background-size: 42px 42px;
-  background-position: 0 0,21px 21px;
 }
 
