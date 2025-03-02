@@ -1,10 +1,12 @@
+// components/ChessBoardWrapper/ChessBoardWrapper.tsx
 "use client";
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Chess, Move } from "chess.js";
-import { Chessboard, ChessboardDnDProvider } from "react-chessboard";
+import ChessboardDisplay from "./ChessboardDisplay";
+import BoardControls from "./BoardControls";
 import style from "./ChessBoardWrapper.module.css";
-import Button from "../Button/Button";
-import Engine from "@/utils/stockfishEngine";
+import Engine from "@/utils/Engine";
+import { mapEvaluationToPercentage } from "@/utils/chessUtils";
 
 interface ChessBoardWrapperProps {
   isFenVisible?: boolean;
@@ -12,6 +14,7 @@ interface ChessBoardWrapperProps {
   stockfishDepth?: number;
   size?: number;
   onFenChange?: (fen: string) => void;
+  userColor?: "white" | "black"; // Пользователь играет за указанную сторону
 }
 
 const ChessBoardWrapper: React.FC<ChessBoardWrapperProps> = ({
@@ -19,22 +22,40 @@ const ChessBoardWrapper: React.FC<ChessBoardWrapperProps> = ({
   isTakebackAble = false,
   stockfishDepth,
   size = 500,
-  onFenChange
+  onFenChange,
+  userColor = "white"
 }) => {
   const game = useMemo(() => new Chess(), []);
   const [fenPosition, setFenPosition] = useState(game.fen());
   const [history, setHistory] = useState<Move[]>([]);
   const [redoStack, setRedoStack] = useState<Move[]>([]);
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
+  const [numericEval, setNumericEval] = useState<number>(0);
+  const [evaluation, setEvaluation] = useState<number>(50);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [boardOrientation, setBoardOrientation] = useState<"white" | "black">("white");
+  const [boardOrientation, setBoardOrientation] = useState<"white" | "black">(userColor);
   const [engine] = useState(() => (stockfishDepth ? new Engine() : null));
 
+  // Обработка сообщений от движка
   useEffect(() => {
     if (!engine) return;
 
-    const handleMessage = ({ bestMove }: { bestMove?: string }) => {
-      if (bestMove) {
+    const handleMessage = ({
+      bestMove,
+      evaluation: engineEval,
+    }: {
+      bestMove?: string;
+      evaluation?: number;
+    }) => {
+
+      if (typeof engineEval !== "undefined") {
+        setNumericEval(engineEval);
+        setEvaluation(mapEvaluationToPercentage(engineEval));
+        // console.log(`Evaluation: ${(engineEval / 100).toFixed(2)}`); // Логирование оценки в консоль
+      }
+      // Бот играет за сторону, противоположную пользователю
+      const engineTurn = userColor === "white" ? "b" : "w";
+      if (bestMove && game.turn() === engineTurn) {
         game.move(bestMove);
         updateBoardState();
       }
@@ -42,14 +63,24 @@ const ChessBoardWrapper: React.FC<ChessBoardWrapperProps> = ({
 
     engine.onMessage(handleMessage);
     return () => engine.terminate();
-  }, [engine]);
+  }, [engine, userColor, game]);
 
   const updateBoardState = () => {
-    setFenPosition(game.fen());
+    const newFen = game.fen();
+    setFenPosition(newFen);
     setHistory(game.history({ verbose: true }) as Move[]);
     setRedoStack([]);
-    onFenChange?.(game.fen());
+    onFenChange?.(newFen);
+    if (stockfishDepth && engine) {
+      engine.evaluatePosition(newFen, stockfishDepth);
+    }
   };
+
+  useEffect(() => {
+    if (stockfishDepth && engine) {
+      engine.evaluatePosition(game.fen(), stockfishDepth);
+    }
+  }, [fenPosition, engine, stockfishDepth, game]);
 
   const handleFenInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fen = e.target.value;
@@ -61,12 +92,14 @@ const ChessBoardWrapper: React.FC<ChessBoardWrapperProps> = ({
     }
   };
 
-  const handlePieceDrop = (sourceSquare: string, targetSquare: string, piece: string): boolean => {
+  const handlePieceDrop = (
+    sourceSquare: string,
+    targetSquare: string,
+    piece: string
+  ): boolean => {
     const move = game.move({ from: sourceSquare, to: targetSquare, promotion: "q" });
-
     if (move) {
       updateBoardState();
-      if (stockfishDepth) engine?.evaluatePosition(game.fen(), stockfishDepth);
       return true;
     }
     return false;
@@ -95,60 +128,43 @@ const ChessBoardWrapper: React.FC<ChessBoardWrapperProps> = ({
   };
 
   const copyFenToClipboard = () => {
-    navigator.clipboard.writeText(fenPosition)
+    navigator.clipboard
+      .writeText(fenPosition)
       .then(() => {
         setCopyStatus("✔️");
         setTimeout(() => setCopyStatus(null), 2000);
       })
-      .catch(err => console.error("Ошибка при копировании FEN:", err));
+      .catch((err) => console.error("Ошибка при копировании FEN:", err));
+  };
+
+  const flipBoard = () => {
+    setBoardOrientation(boardOrientation === "white" ? "black" : "white");
   };
 
   return (
     <div className={style.wrapperContainer} style={{ width: size }}>
-      <ChessboardDnDProvider>
-        <Chessboard
-          id="CustomChessboard"
-          position={fenPosition}
-          onPieceDrop={handlePieceDrop}
-          boardWidth={size}
-          boardOrientation={boardOrientation}
-        />
-
-        <div className={style.controls}>
-          {isFenVisible && (
-            <div className={style.fenContainer}>
-              <Button size="small" variant="info" onClick={copyFenToClipboard}>
-                {copyStatus || "📋 FEN"}
-              </Button>
-              <input
-                ref={inputRef}
-                value={fenPosition}
-                onChange={handleFenInputChange}
-                placeholder="Введите FEN"
-                className={style.fenInputField}
-              />
-            </div>
-          )}
-
-          {isTakebackAble && (
-            <div className={style.actions}>
-              <Button size="small" variant="neutral" onClick={handleUndo} disabled={history.length === 0}>
-                ↩️ Отменить
-              </Button>
-              <Button size="small" variant="neutral" onClick={handleRedo} disabled={redoStack.length === 0}>
-                ↪️ Вернуть
-              </Button>
-              <Button size="small" variant="decline" onClick={handleRestart} disabled={history.length === 0}>
-                🗑️ Перезапустить
-              </Button>
-            </div>
-          )}
-
-          <Button size="small" variant="neutral" onClick={() => setBoardOrientation(boardOrientation === "white" ? "black" : "white")}>
-            🔄 Перевернуть доску
-          </Button>
-        </div>
-      </ChessboardDnDProvider>
+      <ChessboardDisplay
+        fenPosition={fenPosition}
+        size={size}
+        boardOrientation={boardOrientation}
+        onPieceDrop={handlePieceDrop}
+      />
+      <BoardControls
+        isFenVisible={isFenVisible}
+        isTakebackAble={isTakebackAble}
+        fenPosition={fenPosition}
+        copyStatus={copyStatus}
+        inputRef={inputRef}
+        onFenInputChange={handleFenInputChange}
+        onCopyFen={copyFenToClipboard}
+        onUndo={handleUndo}
+        onRedo={handleRedo}
+        onRestart={handleRestart}
+        boardOrientation={boardOrientation}
+        onFlipBoard={flipBoard}
+        evaluation={evaluation}
+        numericEval={numericEval}
+      />
     </div>
   );
 };
