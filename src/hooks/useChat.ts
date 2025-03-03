@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 import { fetchMessages, sendMessage } from "@/lib/chatApi";
 import { fetchUser } from "@/lib/authApi";
 import { connectSocket, disconnectSocket, sendMessageViaSocket } from "@/lib/socket";
@@ -52,6 +53,10 @@ const useChat = (chatId: number) => {
             if (prev.some((msg) => msg.id === message.id)) return prev;
             return [...prev, message];
           });
+          // Если вкладка не активна, показываем уведомление
+          if (!document.hasFocus()) {
+            toast.info(`Новое сообщение от ${message.userLogin}: ${message.text}`);
+          }
         }
       });
 

@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Layout from "../components/Layout/Layout";
+// Уведомления
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,6 +34,7 @@ export default function RootLayout({
       >
         <Layout>
           {children}
+          <ToastContainer />
         </Layout>
         
       </body>
