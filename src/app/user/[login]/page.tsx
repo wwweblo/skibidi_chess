@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { fetchUserProfile, getOrCreateChat, fetchUser} from "@/lib/userApi"; // Добавлен API для чатов
+import { fetchUserProfile, getOrCreateChat, fetchUser } from "@/lib/userApi";
 import { Message } from "@/types/message";
 import styles from "./UserProfile.module.css";
 import { Alert } from "@/components/Alert/Alert";
@@ -19,8 +19,8 @@ const UserPage = () => {
   const router = useRouter();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [chatLoading, setChatLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!login) return;
@@ -41,44 +41,53 @@ const UserPage = () => {
   }, [login]);
 
   const handleOpenChat = async () => {
+    // Гарантируем, что user не равен null
     if (!user) return;
-  
+    setChatLoading(true);
+    setError(null);
+
     try {
-      // ✅ Получаем текущего авторизованного пользователя
       const currentUser = await fetchUser();
       if (!currentUser || !currentUser.userLogin) {
-        console.error("❌ Ошибка: Не удалось получить текущего пользователя");
-        return;
+        throw new Error("Не удалось получить текущего пользователя");
       }
-  
-      console.log(`📡 Открытие чата между ${currentUser.userLogin} и ${user.userLogin}`);
-  
-      // ✅ Передаём корректный `userLogin`
+
+      console.log(
+        `📡 Открытие чата между ${currentUser.userLogin} и ${user.userLogin}`
+      );
+
       const chatId = await getOrCreateChat(currentUser.userLogin, user.userLogin);
       if (!chatId) throw new Error("Ошибка создания или поиска чата");
-  
+
       console.log(`✅ Переход в чат ${chatId}`);
       router.push(`/chat/${chatId}`);
-    } catch (error) {
-      console.error("❌ Ошибка при открытии чата:", error);
-      setError("Не удалось открыть чат");
+    } catch (err: any) {
+      console.error("❌ Ошибка при открытии чата:", err);
+      setError(err.message || "Не удалось открыть чат");
+    } finally {
+      setChatLoading(false);
     }
   };
-  
-  if (loading) return   <Alert text="⏳ Загрузка профиля..."/>;
-  if (error)   return   <Alert text={`❌ ${error}`}/>;
+
+  if (loading) return <Alert text="⏳ Загрузка профиля..." />;
+  if (error) return <Alert text={`❌ ${error}`} />;
+  if (!user) return <Alert text="❌ Пользователь не найден" />;
 
   return (
     <div className={styles.profileContainer}>
-      <h1 className={styles.profileTitle}>👤 Профиль {user?.userLogin}</h1>
-      <p><strong>Email:</strong> {user?.userEmail}</p>
-
-      <button className={styles.chatButton} onClick={handleOpenChat} disabled={chatLoading}>
+      <h1 className={styles.profileTitle}>👤 Профиль {user.userLogin}</h1>
+      <p>
+        <strong>Email:</strong> {user.userEmail}
+      </p>
+      <button
+        className={styles.chatButton}
+        onClick={handleOpenChat}
+        disabled={chatLoading}
+      >
         {chatLoading ? "🔄 Открытие чата..." : "💬 Открыть чат"}
       </button>
-
       <h2 className={styles.messagesTitle}>💬 Сообщения:</h2>
-      {user?.messages.length ? (
+      {user.messages.length ? (
         <ul className={styles.messagesList}>
           {user.messages.map((msg) => (
             <li key={msg.id} className={styles.messageItem}>
@@ -87,7 +96,9 @@ const UserPage = () => {
           ))}
         </ul>
       ) : (
-        <p className={styles.noMessages}>😶 У пользователя пока нет сообщений</p>
+        <p className={styles.noMessages}>
+          😶 У пользователя пока нет сообщений
+        </p>
       )}
     </div>
   );

@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "server": "node --loader ts-node/esm src/server.ts",
-    "generate-links": "node --loader ts-node/esm src/scripts/generateLinks.ts"
+    "generate-links": "node --loader ts-node/esm src/scripts/generateLinks.ts",
+    "clear-db": "node --loader ts-node/esm src/scripts/clearDatabase.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.3.1",
@@ -30,6 +31,7 @@
     "react-chessboard": "^4.7.2",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
+    "react-toastify": "^11.0.5",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1"
   },

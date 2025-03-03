@@ -2,12 +2,14 @@
 import axios from "axios";
 import { Message } from "@/types/message";
 
-const API_URL = "http://localhost:3001"; // Убедись, что API сервер работает
+const API_URL = "http://localhost:3001";
 
 // ✅ Получение сообщений чата
 export const fetchMessages = async (chatId: number): Promise<Message[]> => {
   try {
-    const response = await axios.get(`${API_URL}/messages/${chatId}`, { withCredentials: true });
+    const response = await axios.get(`${API_URL}/messages/${chatId}`, {
+      withCredentials: true,
+    });
     return response.data;
   } catch (error) {
     console.error("❌ Ошибка получения сообщений:", error);
@@ -16,14 +18,18 @@ export const fetchMessages = async (chatId: number): Promise<Message[]> => {
 };
 
 // ✅ Отправка сообщения
-export const sendMessage = async (text: string, chatId: number, userLogin: string): Promise<Message | null> => {
+export const sendMessage = async (
+  text: string,
+  chatId: number,
+  userLogin: string
+): Promise<Message | null> => {
   try {
     const response = await axios.post(
       `${API_URL}/messages`,
-      { text, chatId, userLogin }, // ✅ Теперь отправляем userLogin
-      { 
-        headers: { "Content-Type": "application/json" }, // ✅ Добавлен заголовок
-        withCredentials: true 
+      { text, chatId, userLogin },
+      {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
       }
     );
     return response.data;
@@ -33,18 +39,18 @@ export const sendMessage = async (text: string, chatId: number, userLogin: strin
   }
 };
 
-export async function checkChatAccess(chatId: number, userLogin: string): Promise<boolean> {
+// ✅ Проверка доступа к чату
+export async function checkChatAccess(
+  chatId: number,
+  userLogin: string
+): Promise<boolean> {
   try {
-    const response = await fetch(`/api/chat/access?chatId=${chatId}&userLogin=${userLogin}`, {
-      credentials: "include",
+    const response = await axios.get(`${API_URL}/chat/access`, {
+      params: { chatId, userLogin },
+      withCredentials: true,
     });
-
-    if (!response.ok) {
-      throw new Error("❌ Ошибка доступа к чату");
-    }
-
-    const data = await response.json();
-    return data.hasAccess;
+    console.log("✅ Результат проверки доступа:", response.data);
+    return response.data.hasAccess;
   } catch (error) {
     console.error("❌ Ошибка проверки доступа:", error);
     return false;

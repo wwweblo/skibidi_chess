@@ -11,7 +11,7 @@ const ChatPage = () => {
   }, []);
 
   if (!isClient) {
-    return <div className="loading">⏳ Загрузка...</div>; // Фикс SSR-проблем
+    return <div className="loading">⏳ Загрузка...</div>;
   }
 
   return <Chat chatId={1} />;

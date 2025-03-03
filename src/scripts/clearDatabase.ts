@@ -8,6 +8,7 @@ async function clearDatabase() {
 
     // Удаляем данные в правильном порядке (чтобы не нарушить связи)
     await prisma.message.deleteMany({});
+    await prisma.chatParticipant.deleteMany({});
     await prisma.chat.deleteMany({});
     await prisma.user.deleteMany({});
 
