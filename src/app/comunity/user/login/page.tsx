@@ -27,7 +27,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/user/dashboard");
+    router.push("/comunity/user/dashboard");
   };
 
   return (
@@ -54,7 +54,7 @@ export default function LoginPage() {
       </div>
 
       <div className={style.registerContainer}>
-        <Link href="/user/register">
+        <Link href="/comunity/user/register">
           Нет аккаунта? <b className={style.link}>Зарегистрироваться</b>
         </Link>
       </div>

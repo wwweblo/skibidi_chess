@@ -54,3 +54,15 @@ export async function fetchUser() {
     return null;
   }
 }
+
+export async function fetchSortedUsers(userLogin: string) {
+  try {
+    const res = await fetch(`/api/user?userLogin=${userLogin}`);
+    if (!res.ok) throw new Error("Ошибка загрузки пользователей");
+
+    return await res.json();
+  } catch (error) {
+    console.error("❌ Ошибка запроса пользователей:", error);
+    return [];
+  }
+}

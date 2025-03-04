@@ -52,7 +52,7 @@ export default function Dashboard() {
       });
 
       if (response.ok) {
-        router.push("/user/login");
+        router.push("/comunity/user/login");
       } else {
         console.error("❌ Ошибка выхода:", await response.text());
       }

@@ -16,7 +16,7 @@ interface LayoutProps {
 
 const data: MenuItem[] = [
   { label: "Main Page", link: "/", description: "Home sweet home" },
-  { label: "Openings", link: "/database", description: "Update your knowledge" },
+  { label: "Openings", link: "/play/database", description: "Update your knowledge" },
 ];
 
 const play: MenuItem[] = [
@@ -24,12 +24,13 @@ const play: MenuItem[] = [
 ];
 
 const community: MenuItem[] = [
-  { label: "Chat", link: "/chat", description: "Find some new friends" }
+  { label: "Chat", link: "/comunity/chat", description: "Find some new friends" },
+  { label: "Users", link: "/comunity/users", description: "Find some new friends" }
 ];
 
 const guestMenu: MenuItem[] = [
-  { label: "Login", link: "/user/login", description: "Enter your account" },
-  { label: "Register", link: "/user/register", description: "Create an account" }
+  { label: "Login", link: "/comunity/user/login", description: "Enter your account" },
+  { label: "Register", link: "/comunity/user/register", description: "Create an account" }
 ];
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
@@ -83,7 +84,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               variant="neutral"
               size="small"
               styles={`${style.userButton} justify-self-end`}
-              onClick={() => router.push("/user/dashboard")}
+              onClick={() => router.push("/comunity/user/dashboard")}
             >
               🚹 {userLogin}
             </Button>
