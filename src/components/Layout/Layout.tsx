@@ -14,8 +14,9 @@ interface LayoutProps {
   children?: React.ReactNode;
 }
 
+
+// Navigation menu items
 const data: MenuItem[] = [
-  { label: "Main Page", link: "/", description: "Home sweet home" },
   { label: "Openings", link: "/play/database", description: "Update your knowledge" },
 ];
 
@@ -73,7 +74,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           <span className={style.logo} onClick={() => router.push('/')}>
             Chess.skibidi
           </span>
-          <NavMenuButton label="Data" variant="neutral" items={data} />
+          <NavMenuButton label="Admin" variant="neutral" items={data} />
           <NavMenuButton label="Play" variant="neutral" items={play} />
           <NavMenuButton label="Community" variant="neutral" items={community} />
 

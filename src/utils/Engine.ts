@@ -1,5 +1,5 @@
 // utils/Engine.ts
-const stockfishWorker = () => new Worker("/stockfish.wasm.js", { type: "module" });
+const stockfishWorker = () => new Worker("/stockfish/stockfish.wasm.js", { type: "module" });
 
 // Определение интерфейса EngineMessage
 interface EngineMessage {
